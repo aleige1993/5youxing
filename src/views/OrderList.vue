@@ -26,6 +26,8 @@
                 <span v-if="list.orderState === '2'" class="col-blue">已预约</span>
                 <span v-if="list.orderState === '3'" class="col-blue">使用中</span>
                 <span v-if="list.orderState === '4'" class="col-blue">已完成</span>
+                <span v-if="list.orderState === '7'" class="col-blue">待支付</span>
+                <span v-if="list.orderState === '10'" class="col-blue">已退款</span>
                 <span v-if="list.orderState === '99'" class="col-gray">已取消</span>
                 <img src="../assets/right.png">
               </p>
@@ -34,6 +36,10 @@
               <p class="col-999">订单编号：{{list.orderCode}}</p>
               <p class="col-999">下单时间：{{list.gmtModified}}</p>
               <p class="col-999">实付金额：￥{{list.orderPrice}}</p>
+            </li>
+            <li class="refund">
+              <span v-if="list.orderState === '1' || list.orderState === '2'" class="col-blue" @tap.stop="refund(list.orderCode)">退款</span>
+              <!-- <span v-if="list.orderState === '7'" class="col-blue" @tap.stop="goPay(list.orderCode)">去支付</span> -->
             </li>
           </ul>
         </div>
@@ -59,10 +65,49 @@ export default {
         },
       });
     },
+    goPay(orderNo) {
+      this.$router.push({
+        name: 'success',
+        query: {
+          orderNo,
+        },
+      });
+    },
+    async refund(orderNo) {
+      this.$toast.loading({
+        duration: 0,
+        forbidClick: true, // 禁用背景点击
+        loadingType: 'spinner',
+        message: '加载中',
+      });
+      const res = await this.$postData(`wx/refund?orderNo=${orderNo}`)
+      this.$toast.clear()
+      if (typeof res === 'string') {
+        if (res === '/logout') {
+          this.$store.dispatch('outLogin')
+          return
+        }
+        this.$toast(res)
+      }
+    },
     async initData() {
+      this.$toast.loading({
+        duration: 0,
+        forbidClick: true, // 禁用背景点击
+        loadingType: 'spinner',
+        message: '加载中',
+      });
       const res = await this.$postData(
         `/store/queryAllOrder?memberNo=${this.$store.state.user.memberNo}`,
       );
+      this.$toast.clear()
+      if (typeof res === 'string') {
+        if (res === '/logout') {
+          this.$store.dispatch('outLogin')
+          return
+        }
+        this.$toast(res)
+      }
       this.$data.orderList = res;
       if (this.$data.orderList) {
         this.$data.orderList = this.$data.orderList.filter(
@@ -114,6 +159,9 @@ export default {
 }
 .car-list {
   padding: 0.4rem;
+  .refund {
+    text-align: right;
+  }
   .no-data {
     margin-top: 50%;
     text-align: center;

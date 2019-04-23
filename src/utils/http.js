@@ -204,7 +204,6 @@ const postConfigs = {
 // Add a request interceptor
 axios.interceptors.request.use((config) => {
   beforRequest()
-  console.log(config)
   const token = getToken()
   const header = config.headers
   return {

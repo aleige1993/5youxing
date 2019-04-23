@@ -110,8 +110,7 @@
 import {
   Toast,
 } from 'vant';
-import { setTimeout } from 'timers';
-import { timestampToTime, formatTimeCompatibleIos } from '../utils/tool';
+import { timestampToTime, formatTimeCompatibleIos, timeToHour } from '../utils/tool';
 
 
 export default {
@@ -209,8 +208,9 @@ export default {
     // },
     getStartTime() {
       const time = new Date().getTime();
-      const startTime = time + 2 * 24 * this.$data.oneHourTimestamp;
-      return timestampToTime(startTime);
+      // const startTime = time + 2 * 24 * this.$data.oneHourTimestamp;
+      const startTime = timeToHour(time)
+      return startTime;
       //        let time = new Date().getTime();
       //        let timeArr = timestampToTime(time).split(' ');
       //        timeArr[1] = timeArr[1].split(':').map((item, index) => {
@@ -230,19 +230,22 @@ export default {
     initTime(time = this.getStartTime()) {
       this.$data.formData.startTime = time;
       const timestamp = new Date(formatTimeCompatibleIos(time)).getTime();
-      if (this.$data.formData.actType === '0') {
-        this.$data.formData.endTime = timestampToTime(
-          timestamp + 24 * 2 * this.$data.oneHourTimestamp,
-        );
-      } else if (this.$data.formData.actType === '1') {
-        this.$data.formData.endTime = timestampToTime(
-          timestamp + 24 * 4 * this.$data.oneHourTimestamp,
-        );
-      } else if (this.$data.formData.actType === '2') {
-        this.$data.formData.endTime = timestampToTime(
-          timestamp + this.$data.oneHourTimestamp,
-        );
-      }
+      this.$data.formData.endTime = timestampToTime(
+        timestamp + 24 * 1 * this.$data.oneHourTimestamp,
+      );
+      // if (this.$data.formData.actType === '0') {
+      //   this.$data.formData.endTime = timestampToTime(
+      //     timestamp + 24 * 1 * this.$data.oneHourTimestamp,
+      //   );
+      // } else if (this.$data.formData.actType === '1') {
+      //   this.$data.formData.endTime = timestampToTime(
+      //     timestamp + 24 * 4 * this.$data.oneHourTimestamp,
+      //   );
+      // } else if (this.$data.formData.actType === '2') {
+      //   this.$data.formData.endTime = timestampToTime(
+      //     timestamp + this.$data.oneHourTimestamp,
+      //   );
+      // }
     },
     selectTime(type) {
       // if (this.$data.formData.actType === '2' && type === 'endTime') {
@@ -317,51 +320,51 @@ export default {
       }
       return true;
     },
-    selectActivity(type, saleSn, saleName) {
-      //        this.$Tools.layerOpen(this.$nativeAppUtils.getNums());
-      // if (type === '1') {
-      //   this.$data.carList = this.$data.carAllList.filter(
-      //     item => item.carsName.indexOf('朗逸') > -1
-      //       || item.carsName.indexOf('华颂7') > -1
-      //       || item.carsName.indexOf('雪铁龙C3-XR') > -1,
-      //   );
-      // }
-      // // else if (type === '2') {
-      // //   // if (!this.$nativeAppUtils.getNums()) {
-      // //   //   this.$nativeAppUtils.toLogin();
-      // //   //   return false;
-      // //   // }
-      // //   const res = await this.$postData('/store/attend', {
-      // //     actType: type,
-      // //     memberNo: this.$store.user.memberNo,
-      // //   });
-      // //   if (res.body.ifAttend === 'no') {
-      // //     this.$Tools.layerOpen('您没有免费接送的资格，去抽奖活动可获取资格');
-      // //     return false;
-      // //   }
-      // //   this.$data.carList = this.$data.carAllList.filter(
-      // //     item => item.carsName.indexOf('华颂7') > -1,
-      // //   );
-      // // }
-      // else {
-      //   this.$data.carList = this.$data.carAllList;
-      // }
-      // this.$data.carInfo = this.$data.carList[0];
-      this.$data.carList = this.$data.carList.map((item, index) => {
-        item.value = index;
-        item.text = `${item.carsName}(￥${item.unitPrice}/${item.unit})`;
-        return item;
-      });
-      // this.$data.activityList = this.$data.activityList.map((item) => {
-      //   item.active = type === item.type;
-      //   return item;
-      // });
-      this.$data.formData.actType = type;
-      this.$data.formData.actCode = saleSn;
-      this.$data.formData.actName = saleName;
-      this.initTime();
-      // this.$nativeAppUtils.setNavTitle(saleName);
-    },
+    // selectActivity(type, saleSn, saleName) {
+    //   //        this.$Tools.layerOpen(this.$nativeAppUtils.getNums());
+    //   // if (type === '1') {
+    //   //   this.$data.carList = this.$data.carAllList.filter(
+    //   //     item => item.carsName.indexOf('朗逸') > -1
+    //   //       || item.carsName.indexOf('华颂7') > -1
+    //   //       || item.carsName.indexOf('雪铁龙C3-XR') > -1,
+    //   //   );
+    //   // }
+    //   // // else if (type === '2') {
+    //   // //   // if (!this.$nativeAppUtils.getNums()) {
+    //   // //   //   this.$nativeAppUtils.toLogin();
+    //   // //   //   return false;
+    //   // //   // }
+    //   // //   const res = await this.$postData('/store/attend', {
+    //   // //     actType: type,
+    //   // //     memberNo: this.$store.user.memberNo,
+    //   // //   });
+    //   // //   if (res.body.ifAttend === 'no') {
+    //   // //     this.$Tools.layerOpen('您没有免费接送的资格，去抽奖活动可获取资格');
+    //   // //     return false;
+    //   // //   }
+    //   // //   this.$data.carList = this.$data.carAllList.filter(
+    //   // //     item => item.carsName.indexOf('华颂7') > -1,
+    //   // //   );
+    //   // // }
+    //   // else {
+    //   //   this.$data.carList = this.$data.carAllList;
+    //   // }
+    //   // this.$data.carInfo = this.$data.carList[0];
+    //   // this.$data.carList = this.$data.carList.map((item, index) => {
+    //   //   item.value = index;
+    //   //   item.text = `${item.carsName}(￥${item.unitPrice}/${item.unit})`;
+    //   //   return item;
+    //   // });
+    //   // this.$data.activityList = this.$data.activityList.map((item) => {
+    //   //   item.active = type === item.type;
+    //   //   return item;
+    //   // });
+    //   this.$data.formData.actType = type;
+    //   this.$data.formData.actCode = saleSn;
+    //   this.$data.formData.actName = saleName;
+    //   this.initTime();
+    //   // this.$nativeAppUtils.setNavTitle(saleName);
+    // },
     selectType(info, list) {
       const that = this;
       const picker = new mui.PopPicker();
@@ -370,10 +373,6 @@ export default {
         that[info] = that.$data[list][items[0].value];
         picker.dispose();
       });
-    },
-    popupComfirm(value, index) {
-      console.log(index);
-      this.$data[this.popupObj] = value;
     },
     // selectPlace() {
     //   const that = this;
@@ -472,9 +471,9 @@ export default {
       // }
     },
     async initData() {
-      const actType = this.$route.query.type || '0';
-      const actCode = '';
-      const actName = '';
+      // const actType = this.$route.query.type || '0';
+      // const actCode = '';
+      // const actName = '';
       // const actRes = await this.$postData('/activity/travel/list/Activity', {});
       // if (actRes.success && actRes.success === 'true') {
       //   if (actRes.body && actRes.body.length) {
@@ -499,7 +498,6 @@ export default {
         message: '加载中',
       });
       const shopRes = await this.$postData('store/storeList');
-      console.log(shopRes);
       // if (shopRes.success && shopRes.success === 'true') {
       this.$data.shopList = shopRes.map((item, index) => {
         item.value = index;
@@ -515,12 +513,12 @@ export default {
         return
       }
       this.shopList = shopRes.map((item, index) => {
-        console.log(item);
         item.value = index;
         item.text = item.corpName;
         return item;
       });
 
+      // get car
       this.$toast.loading({
         duration: 0,
         forbidClick: true, // 禁用背景点击
@@ -544,7 +542,15 @@ export default {
       this.$data.carList = carRes
       const [carInfo] = this.$data.carList
       this.$data.carInfo = carInfo
-      this.selectActivity(actType, actCode, actName);
+
+      this.$data.carList = this.$data.carList.map((item, index) => {
+        item.value = index;
+        item.text = `${item.carsName}(￥${item.unitPrice}/${item.unit})`;
+        return item;
+      });
+
+      this.initTime();
+      // this.selectActivity(actType, actCode, actName);
     },
   },
 
@@ -558,8 +564,32 @@ export default {
     document.body.style.backgroundColor = '#fff';
   },
   watch: {
-    shopInfo: (val) => {
-      console.log(val)
+    async shopInfo(val) {
+      this.$toast.loading({
+        duration: 0,
+        forbidClick: true, // 禁用背景点击
+        loadingType: 'spinner',
+        message: '加载中',
+      });
+      const carRes = await this.$postData('/store/car/carSeriesList', {
+        storeNo: val.merchantNo,
+      });
+
+      this.$toast.clear()
+      if (typeof carRes === 'string' || !carRes) {
+        this.$toast(carRes || '请求错误')
+      }
+
+      this.$data.carAllList = carRes;
+      this.$data.carList = carRes
+      const [carInfo] = this.$data.carList
+      this.$data.carInfo = carInfo
+
+      this.$data.carList = this.$data.carList.map((item, index) => {
+        item.value = index;
+        item.text = `${item.carsName}(￥${item.unitPrice}/${item.unit})`;
+        return item;
+      });
     },
   },
 };

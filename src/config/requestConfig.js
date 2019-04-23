@@ -46,9 +46,7 @@ const resultHandler = (res = {
   success: true,
   count: 0, // 当data为array, 存在count
 }) => {
-  console.log(res)
   const { data } = res
-  console.log(data)
   if (data.code === '0000') {
     return data.data;
   }

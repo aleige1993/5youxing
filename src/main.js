@@ -10,7 +10,6 @@ Vue.config.productionTip = false;
 
 Vue.filter('dateFormate', (value, format) => {
   let currDate = value
-  console.log(typeof currDate)
   if (typeof currDate === 'string' || typeof currDate === 'number') {
     currDate = new Date(currDate)
   }

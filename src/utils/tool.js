@@ -1,3 +1,26 @@
+function isIOS() {
+  const agent = window.navigator.userAgent.toLowerCase();
+  return !!agent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)
+}
+
+function Timespan(time) {
+  const date = (typeof time === 'number' || typeof time === 'string') ? new Date(time) : time
+  const Y = date.getFullYear();
+  const M = date.getMonth() + 1 < 10 ? `0${date.getMonth() + 1}` : (date.getMonth() + 1);
+  const D = date.getDate() < 10 ? `0${date.getDate()}` : date.getDate();
+  const h = date.getHours() < 10 ? `0${date.getHours()}` : date.getHours();
+  const m = date.getMinutes() < 10 ? `0${date.getMinutes()}` : date.getMinutes();
+  const s = date.getSeconds() < 10 ? `0${date.getSeconds()}` : date.getSeconds();
+  return {
+    value: `${Y}-${M}-${D} ${h}:${m}:${s}`,
+    Y,
+    M,
+    D,
+    h,
+    m,
+    s,
+  }
+}
 /**
    * 时间戳转时间
    * @returns {string}
@@ -23,9 +46,25 @@ function timestampToTime(timestamp, fix) {
     return `${Y}-${M}`;
   }
   const time = `${Y}-${M}-${D} ${h}:${m}:${s}`
-  const agent = window.navigator.userAgent.toLowerCase();
-  const isIos = agent.indexOf('iphone') > -1
-  return isIos ? time.replace(/-/g, '/') : time;
+  return time // isIOS() ? time.replace(/-/g, '/') : time;
+}
+
+function timeToHour(time) {
+  const {
+    Y,
+    M,
+    D,
+    h,
+    m,
+    s,
+  } = Timespan(time)
+  console.log(h)
+  let hour = time.getHours() + 1 > 11
+  if (m > 0 || s > 0) {
+    hour = hour < 10 ? `0${hour}` : hour
+  }
+  const res = `${Y}-${M}-${D} ${hour}:00:00`;
+  return res // isIOS() ? res.replace(/-/g, '/') : res;
 }
 
 /**
@@ -33,9 +72,7 @@ function timestampToTime(timestamp, fix) {
 * @returns {string}
 */
 function formatTimeCompatibleIos(time) {
-  const agent = window.navigator.userAgent.toLowerCase();
-  const isIos = agent.indexOf('iphone') > -1
-  return isIos ? time.replace(/-/g, '/') : time;
+  return isIOS() ? time.replace(/-/g, '/') : time;
 }
 
 /**
@@ -64,4 +101,5 @@ export {
   layerOpen,
   formatTimeCompatibleIos,
   timestampToTime,
+  timeToHour,
 }
