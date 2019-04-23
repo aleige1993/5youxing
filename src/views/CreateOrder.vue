@@ -279,21 +279,11 @@ export default {
         this.$toast(e);
       }
     },
-
-    send() {
-      $.get(
-        `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${
-          this.wxParams.appid
-        }&redirect_uri=https%3A%2F%2Fzucheapi.songchewang.com%2Fuser%2Fupdate%3Fmember&response_type=code&scope=snsapi_base&state=${
-          this.formData.orderCode
-        }#wechat_redirect`,
-      );
-    },
   },
   mounted() {
     document.body.style.backgroundColor = '#eeeeee';
     this.initData();
-    $.get(`https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx8ddfeecf1fd01033&redirect_uri=https://zucheapi.songchewang.com/user/update/member&response_type=code&scope=snsapi_base&state=${this.$store.state.user.memberNo}#wechat_redirect`);
+    // $.get(`https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx8ddfeecf1fd01033&redirect_uri=https://zucheapi.songchewang.com/user/update/member&response_type=code&scope=snsapi_base&state=${this.$store.state.user.memberNo}#wechat_redirect`);
   },
 };
 </script>

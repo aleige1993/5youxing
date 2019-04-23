@@ -110,6 +110,7 @@
 import {
   Toast,
 } from 'vant';
+import { setTimeout } from 'timers';
 import { timestampToTime, formatTimeCompatibleIos } from '../utils/tool';
 
 
@@ -447,14 +448,18 @@ export default {
         return false
       }
 
-      // window.open('')
+      const mywin = window.open(`https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx8ddfeecf1fd01033&redirect_uri=https://zucheapi.songchewang.com/user/update/member&response_type=code&scope=snsapi_base&state=${this.$store.state.user.memberNo}#wechat_redirect`, '', 'height=100, width=400, top=0, left=0, toolbar=no, menubar=no, scrollbars=no, resizable=no, location=no, status=no')
+      const that = this
+      setTimeout(() => {
+        mywin.close()
+        that.$router.push({
+          name: 'createOrder',
+          query: {
+            orderNo: res.orderNo,
+          },
+        }, 2000);
+      })
 
-      this.$router.push({
-        name: 'createOrder',
-        query: {
-          orderNo: res.orderNo,
-        },
-      });
 
       return false;
       // if (res.success && res.success === 'true') {
