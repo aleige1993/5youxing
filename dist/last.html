@@ -1,0 +1,234 @@
+<!--
+ * @Description:
+ * @Author: jobscq
+ * @LastEditors: jobscq
+ * @Date: 2019-04-12 15:48:31
+ * @LastEditTime: 2019-04-21 17:42:49
+ -->
+ <!DOCTYPE >
+ <html>
+   <head>
+     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+     <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0" />
+     <title>注册</title>
+     <style>
+       * {
+         margin: 0;
+         padding: 0;
+         font-size: 16px;
+       }
+ 
+       header {
+         line-height: 40px;
+         border-bottom: 1px solid #aaa;
+         text-align: center;
+       }
+       
+       .form {
+         margin: 20px 0;
+       }
+ 
+       .form .phone {
+         line-height: 40px;
+         border-bottom: 1px solid #aaa;
+         margin-bottom: 20px;
+         padding: 0 20px;
+         flex: 1;
+       }
+ 
+       input {
+         line-height: 40px;
+         /* padding-left: 10px; */
+         border: none;
+       }
+ 
+       .flex {
+         display: flex;
+       }
+ 
+       .btn-box {
+         padding: 20px;
+       }
+ 
+       .btn {
+         line-height: 40px;
+         color: #fff;
+         background: #3984ff;
+         border-radius: 5px;
+         text-align: center;
+       }
+ 
+       .btn:hover{
+       }
+ 
+       .btn.gray {
+         background:#aaa;
+       }
+ 
+       div.img{
+         padding: 0 6px 0 12px;
+       }
+       input { padding: 0 6px;}
+       .tip span { 
+         color: #ff9966;
+         display: none;
+         font-size: 14px;
+         padding: 0 20px;
+        }
+
+        .alert {
+         display: none;
+         position: absolute;
+         z-index: 1000;
+         width: 300px;
+         height: 150px;
+         top: 0;
+         bottom: 0;
+         left: 0;
+         right: 0;
+         margin: auto;
+         border: 1px solid #ccc;
+         border-radius: 5px;
+         background-color: #fff;
+       }
+
+       .alert .content{
+         display: flex;
+         align-items: center;
+         font-size: 16px;
+         color: #333;
+         border-bottom: 1px solid #ccc;
+         padding: 10px;
+         height: 90px;
+         overflow: hidden;
+       }
+       .alert .click{
+         text-align: center;
+         font-size: 16px;
+         height: 40px;
+         line-height: 40px;
+         color: #ff9966;
+       }
+     </style>
+   </head>
+ 
+   <body>
+      <div class="alert last">
+        <div class="content">恭喜您，注册成功！</div>
+        <div class="click">关 闭</div>
+      </div>
+      <div class="alert dialog">
+          <div class="content"></div>
+          <div class="click">确 定</div>
+        </div>
+     <header>注册</header>
+     <div class="form">
+       <div class="flex">
+         <input placeholder="请输入密码(6-16位字母、数字或符号）" class="phone pwd1" type="password" maxlength="16" />
+       </div>
+       <div class="flex">
+        <input placeholder="请再次输入密码(6-16位字母、数字或符号）" class="phone pwd2" type="password" maxlength="16" />
+      </div>
+      <div class="tip">
+          <span>密码必须前后一致</span>
+        </div>
+     </div>
+     <div class="btn-box">
+       <div class="btn gray">确认</div>
+     </div>
+     <script src="./utils/jquery.js"></script>
+     <script>
+       var registerUrl = "/user/";
+       var mobile = getQueryString("mobile")
+       
+       function getQueryString(name) {
+         var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+         var r = window.location.search.substr(1).match(reg);
+         if (r != null) return unescape(r[2]);
+         return null;
+       }
+ 
+       $('.pwd2').on('input', function(){
+         if($('.pwd2').val() != '' && $('.pwd1').val() == $('.pwd2').val()) {
+           $('.btn').removeClass('gray')
+           $('.tip span').hide()
+         } else {
+           $('.btn').addClass('gray')
+           $('.tip span').show()
+         }
+       })
+
+       $('.last .click').on('click', function() {
+        $('.alert').hide();
+        // if(WeixinJSBridge) {
+        //   WeixinJSBridge.invoke('closeWindow',{},function(res){});
+        // } else {
+        //   location.href = './register.html'
+        // }
+        location.href = '/#'
+        
+      })
+
+      $('.dialog .click').on('click', function() {
+        $('.alert').hide();
+      })
+ 
+       $(".btn").on('click', function() {
+          if($('.btn').hasClass('gray')) {
+            return;
+          }
+         var pwd1 = $(".pwd1").val();
+         var pwd2 = $(".pwd2").val();
+ 
+         if (pwd1 == "" || pwd1 == undefined) {
+          //  alert("请输入密码");
+          $('.dialog .content').text('请输入密码')
+          $('.dialog').show()
+          $(".pwd1").focus();
+           return;
+         }
+
+         if(!/^(\w){6,16}$/.exec(pwd1)) {
+           return
+         }
+
+         if (pwd1 != pwd2 ) {
+          //  alert("请输入密码");
+          $('.dialog .content').text('两次输入密码不一致')
+          $('.dialog').show()
+          $(".pwd1").focus();
+           return;
+         }
+ 
+         $.ajax({
+           url: registerUrl + "register?mobile=" + mobile + '&password=' + pwd1 + '&rePasswd=' + pwd2,
+           type: "post",
+           headers: {
+             "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8"
+           },
+           success: function(res, status, xhr) {
+             if (res && res.code && res.code == '0000') {
+              localStorage.setItem('youx5User', JSON.stringify(res.data))
+              $('.last.alert').show()
+
+             } else {
+              //  alert(res.reMsg || '请求失败')
+              $('.dialog .content').text(res.message || '请求失败')
+              $('.dialog').show()
+             }
+           },
+           error: (xhr, status, error) => {
+            //  alert("网络错误,请检查网络");
+            $('.dialog .content').text("网络错误,请检查网络")
+              $('.dialog').show()
+           },
+           complete: (xhr, status) => {
+             console.log("request hide loading...");
+           }
+         });
+       });
+ 
+     </script>
+   </body>
+ </html>
+ 
