@@ -96,7 +96,7 @@
       </div>
     </div>
     <!--<p class="remarks">如有问题请拨打官方电话：400-045-0968</p>-->
-    <div @click="createOrder" class="next-button">
+    <div id="createOrder" @click="createOrder" class="next-button">
       <div>下一步</div>
     </div>
     <!-- <div v-else class="next-button">
@@ -446,6 +446,9 @@ export default {
         this.$toast(res || '请求错误')
         return false
       }
+
+      // window.open('')
+
       this.$router.push({
         name: 'createOrder',
         query: {

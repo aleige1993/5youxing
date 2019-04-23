@@ -293,9 +293,7 @@ export default {
   mounted() {
     document.body.style.backgroundColor = '#eeeeee';
     this.initData();
-    $.get(
-      'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx8ddfeecf1fd01033&redirect_uri=https://zucheapi.songchewang.com/user/update/member&response_type=code&scope=snsapi_base&state={this.$store.state.user.memberNo}#wechat_redirect',
-    );
+    $.get(`https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx8ddfeecf1fd01033&redirect_uri=https://zucheapi.songchewang.com/user/update/member&response_type=code&scope=snsapi_base&state=${this.$store.state.user.memberNo}#wechat_redirect`);
   },
 };
 </script>
