@@ -459,6 +459,12 @@ export default {
       //     },
       //   }, 1000);
       // })
+      this.$router.push({
+        name: 'createOrder',
+        query: {
+          orderNo: res.orderNo,
+        },
+      }, 1000);
 
 
       return false;
