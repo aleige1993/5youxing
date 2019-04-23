@@ -278,12 +278,12 @@ export default {
       dtPicker.show((rs) => {
         console.log(rs)
         if (type === 'startTime') {
-          that.initTime(`${rs.value}:00:00`);
+          that.initTime(formatTimeCompatibleIos(`${rs.value}:00:00`));
         } else {
           // console.log(_this.$data.formData.endTime.substring(10, 19));
           console.log(that.$data.formData.endTime)
-          console.log(rs.value)
-          that.$data.formData.endTime = `${rs.value}:00:00`
+          console.log(`${rs.value}:00:00`)
+          that.$data.formData.endTime = formatTimeCompatibleIos(`${rs.value}:00:00`)
         }
         dtPicker.dispose();
       });

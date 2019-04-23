@@ -123,6 +123,7 @@
 </template>
 
 <script>
+// const wx = require('../utils/weixin-jsapi.js')
 
 export default {
   name: 'carshopleaseOrderConfirm',
@@ -268,7 +269,6 @@ export default {
     },
 
     async wxconfig() {
-      const wx = require('../utils/weixin-jsapi.js')
       if (wx) {
         this.$toast.loading({
           duration: 0,

@@ -179,7 +179,7 @@ export default {
         driverBackPic: this.driverBackPic, // 驾驶证右
       })
       this.$toast.clear()
-      if (typeof res === 'string' || !res) {
+      if (typeof res === 'string') {
         if (res === '/logout') {
           this.$store.dispatch('outLogin')
           return

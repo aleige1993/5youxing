@@ -1,4 +1,4 @@
-const storage = window.localStorage
+const storage = window.sessionStorage
 const mainKey = 'youx5'
 const userKey = 'youx5User'
 const token = 'youx5Token'
