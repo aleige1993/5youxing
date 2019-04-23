@@ -557,6 +557,11 @@ export default {
     // do something before destroying vue instance
     document.body.style.backgroundColor = '#fff';
   },
+  watch: {
+    shopInfo: (val) => {
+      console.log(val)
+    },
+  },
 };
 </script>
 

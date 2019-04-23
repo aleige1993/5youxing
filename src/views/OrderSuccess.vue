@@ -29,7 +29,9 @@ export default {
     [Button.name]: Button,
   },
   data() {
-    return {};
+    return {
+      orderNo: this.$route.query.orderNo,
+    }
   },
   methods: {
     async wxpay() {
@@ -40,7 +42,7 @@ export default {
         message: '加载中',
       });
       const args = await this.$postData('wx/pay', {
-        orderNo: this.formData.orderCode,
+        orderNo: this.orderNo,
       });
       this.$toast.clear()
 
