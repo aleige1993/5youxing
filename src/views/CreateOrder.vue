@@ -277,13 +277,14 @@ export default {
           message: '加载中',
         });
         // 这里如果后端要url 是#前面的部分不包括#号
-        await this.$axios.get(
+        const aa = await $.get(
           `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${
             this.wxParams.appid
           }&redirect_uri=https%3A%2F%2Fzucheapi.songchewang.com%2Fuser%2Fupdate%3Fmember&response_type=code&scope=snsapi_base&state=${
             this.formData.orderCode
           }#wechat_redirect`,
         );
+        this.$toast(aa)
         const data = await this.$getData('wx/js/sdk/init');
         wx.config({
           debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
