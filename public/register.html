@@ -1,0 +1,203 @@
+<!--
+ * @Description:
+ * @Author: jobscq
+ * @LastEditors: jobscq
+ * @Date: 2019-04-12 15:48:31
+ * @LastEditTime: 2019-04-21 16:51:09
+ -->
+<!DOCTYPE >
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0" />
+    <title>注册</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        font-size: 16px;
+      }
+
+      header {
+        line-height: 40px;
+        border-bottom: 1px solid #ccc;
+        text-align: center;
+      }
+      
+      .form {
+        margin: 20px 0;
+      }
+
+      .form .phone {
+        line-height: 40px;
+        border-bottom: 1px solid #ccc;
+        margin-bottom: 20px;
+        padding: 0 20px;
+        flex: 1;
+      }
+
+      input {
+        line-height: 40px;
+        /* padding-left: 10px; */
+        border: none;
+      }
+
+      .flex {
+        display: flex;
+      }
+
+      .btn-box {
+        padding: 20px;
+      }
+
+      .btn {
+        line-height: 40px;
+        color: #fff;
+        background: #3984ff;
+        border-radius: 5px;
+        text-align: center;
+      }
+
+      .btn:hover{
+      }
+
+      .btn.gray {
+        background:#ccc;
+      }
+
+      div.img{
+        padding: 0 6px 0 12px;
+      }
+      input { padding: 0 6px;}
+      .tip span { 
+        color: #ff9966;
+        display: none;
+        font-size: 14px;
+        padding: 0 20px;
+       }
+
+       .alert {
+         display: none;
+         position: absolute;
+         z-index: 1000;
+         width: 300px;
+         height: 150px;
+         top: 0;
+         bottom: 0;
+         left: 0;
+         right: 0;
+         margin: auto;
+         border: 1px solid #ccc;
+         border-radius: 5px;
+         background-color: #fff;
+       }
+
+       .alert .content{
+         display: flex;
+         align-items: center;
+         font-size: 16px;
+         color: #333;
+         border-bottom: 1px solid #ccc;
+         padding: 10px;
+         height: 90px;
+         overflow: hidden;
+       }
+       .alert .click{
+         text-align: center;
+         font-size: 16px;
+         height: 40px;
+         line-height: 40px;
+         color: #ff9966;
+       }
+    </style>
+  </head>
+
+  <body>
+    <div class="alert">
+      <div class="content"></div>
+      <div class="click">确 定</div>
+    </div>
+    <header>注册</header>
+    <div class="form">
+      <div class="flex">
+        <input placeholder="请输入手机号" class="phone" type="tel" maxlength="11" />
+      </div>
+      <div class="tip">
+        <span>您输入的手机号已是我们的老朋友~~请重新输入</span>
+      </div>
+    </div>
+    <div class="btn-box">
+      <div class="btn gray">下一步</div>
+    </div>
+    <script src="./utils/jquery.js"></script>
+    <script>
+      var registerUrl = "/user/";
+
+      function getQueryString(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+        var r = window.location.search.substr(1).match(reg);
+        if (r != null) return unescape(r[2]);
+        return null;
+      }
+
+      $('.phone').on('input', function(){
+        if($('.phone').val() != '') {
+          $('.btn').removeClass('gray')
+          $('.tip span').hide()
+        } else {
+          $('.btn').addClass('gray')
+        }
+      })
+
+      $('.click').on('click', function() {
+        $('.alert').hide();
+      })
+
+      $(".btn").on('click', function() {
+        if($('.btn').hasClass('gray')) {
+          return;
+        }
+        let phone = $(".phone").val();
+
+        if (phone == "" || phone == undefined) {
+          $('.alert .content').text('请输入手机号')
+          $('.alert').show()
+          return;
+        }
+
+        $.ajax({
+          url: registerUrl + "verifyUser",
+          type: "post",
+          data: {
+            mobile: phone
+          },
+          headers: {
+            "Content-Type": 'application/x-www-form-urlencoded;charset=UTF-8' // "application/json"
+          },
+          success: function(res, status, xhr) {
+            if (res && res.code && res.code == '0000') {
+              // $(".btn").addClass('gray').attr('disabled', 'true')
+              // $(".btn").off('click')
+              location.href = './validCode.html?mobile=' + phone
+            } else if( res.code == '0001') {
+              $('.tip span').show()
+            } else {
+              $('.alert .content').text(res.message || '请求失败')
+              $('.alert').show()
+              // alert(res.reMsg || '请求失败')
+            }
+          },
+          error: (xhr, status, error) => {
+            $('.alert .content').text("网络错误,请检查网络")
+            $('.alert').show()
+            // alert("网络错误,请检查网络");
+          },
+          complete: (xhr, status) => {
+            console.log("request hide loading...");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

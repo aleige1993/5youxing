@@ -1,0 +1,365 @@
+<!--
+ * @Description:
+ * @Author: jobscq
+ * @LastEditors: jobscq
+ * @Date: 2019-04-11 19:02:17
+ * @LastEditTime: 2019-04-21 16:56:46
+ -->
+<!DOCTYPE >
+<html>
+  <head>
+    <title>注册</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0" />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        font-size: 16px;
+      }
+
+      header {
+        line-height: 40px;
+        border-bottom: 1px solid #ddd;
+        text-align: center;
+      }
+
+      .form {
+        margin: 20px;
+      }
+
+      .form .title{
+        font-weight: 600;
+        font-size: 16px;
+      }
+
+      .form .intro,
+      .form .intro .phone {
+        font-size: 13px;
+        color: #aaa;
+        margin: 10px 0;
+      }
+
+      .form .code {
+        line-height: 40px;
+        border-bottom: 1px solid #ccc;
+        margin-bottom: 20px;
+        padding: 0 20px;
+        flex: 1;
+      }
+
+      .send-code{
+        font-size: 12px;
+        text-align: center;
+      }
+      .send-code.gray{
+        color: #ccc;
+      }
+
+      input {
+        line-height: 40px;
+        padding: 0 6px;
+        border: none;
+      }
+
+      .flex {
+        display: flex;
+      }
+
+      .btn-box {
+        padding: 20px;
+      }
+
+      .btn {
+        line-height: 40px;
+        color: #fff;
+        background: #3984ff;
+        border-radius: 5px;
+        text-align: center;
+      }
+
+      .code-input {
+        flex: 1;
+      }
+
+      .code-btn {
+        padding: 0 10px;
+        line-height: 40px;
+        color: #ff9966;
+        font-size: 13px;
+      }
+
+      .code-btn.sending{
+        color: #ccc;
+      }
+
+      .btn.gray {
+        background:#ccc;
+      }
+
+      .pay-password{
+        width: 100%;
+        height: 50px;
+        /* border: 1px solid #999999; */
+        margin: 20px auto 0 auto;
+        position: relative;
+    }
+    .pay-password .real-ipt{
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 50px;
+        line-height: 50px;
+        opacity: 0;
+        z-index: 3;
+        text-indent: -999em; /*文本向左缩进*/
+        margin-left: -100%; /*输入框光标起始点向左左移*/
+        width: 200%; /*输入框增大一倍*/
+    }
+    .pay-password .surface-ipts{
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 50px;
+        line-height: 50px;
+        z-index: 1;
+        overflow: hidden;
+    }
+    .pay-password .surface-ipts .surface-ipt{
+        height: 50px;
+        line-height: 50px;
+        display: flex;
+        justify-content: space-between;
+    }
+    .pay-password .surface-ipts .surface-ipt input{
+        width: 40px;
+        height: 40px;
+        line-height: 50px;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+        color: #333333;
+        font-size: 20px;
+        text-align: center;
+        padding: 0;
+    }
+    .alert {
+         display: none;
+         position: absolute;
+         z-index: 1000;
+         width: 300px;
+         height: 150px;
+         top: 0;
+         bottom: 0;
+         left: 0;
+         right: 0;
+         margin: auto;
+         border: 1px solid #ccc;
+         border-radius: 5px;
+         background-color: #fff;
+       }
+
+       .alert .content{
+         display: flex;
+         align-items: center;
+         font-size: 16px;
+         color: #333;
+         border-bottom: 1px solid #ccc;
+         padding: 10px;
+         height: 90px;
+         overflow: hidden;
+       }
+       .alert .click{
+         text-align: center;
+         font-size: 16px;
+         height: 40px;
+         line-height: 40px;
+         color: #ff9966;
+       }
+    </style>
+  </head>
+
+  <body>
+    <div class="alert">
+      <div class="content"></div>
+      <div class="click">确 定</div>
+    </div>
+    <header>
+      注册
+    </header>
+    <div class="form">
+      <div>
+        <p class="title">输入验证码</p>
+        <p class="intro">验证码已发送到<span class="phone"></span></p>
+      </div>
+      <div class="code-box flex">
+        <div class="code-input flex ">
+          <!-- <input placeholder="验证码" class="code" type="tel" maxlength="6" /> -->
+          <div class="pay-password">
+              <input type="tel" maxlength="6" class="real-ipt">
+              <div class="surface-ipts">
+                  <div class="surface-ipt">
+                      <input type="tel" maxlength="1">
+                      <input type="tel" maxlength="1">
+                      <input type="tel" maxlength="1">
+                      <input type="tel" maxlength="1">
+                      <input type="tel" maxlength="1">
+                      <input type="tel" maxlength="1">
+                  </div>
+              </div>
+          </div>
+        </div>
+      </div>
+      <div class="send-code"><span class="code-btn">重新获取验证码</span></div>
+    </div>
+    <div class="btn-box">
+      <div class="btn gray">下一步</div>
+    </div>
+    <script src="./utils/jquery.js"></script>
+    <script>
+      var registerUrl = "/user/";
+      var mobile = getQueryString("mobile")
+
+      $('.phone').text(mobile)
+
+      $('.click').on('click', function() {
+        $('.alert').hide();
+      })
+
+      function getQueryString(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+        var r = window.location.search.substr(1).match(reg);
+        if (r != null) return unescape(r[2]);
+        return null;
+      }
+
+      function getCodeCallback() {
+        $('.code-btn').addClass("sending");
+        $('.code-btn').text("60s后重发");
+        let count = 60;
+        let that = this;
+        let interval = setInterval(function() {
+          if (count > 0) {
+            count--;
+            $('.code-btn').text(count + "s后重发");
+          } else {
+            $('.code-btn').text("重新获取验证码");
+            $('.code-btn').removeClass("sending");
+            clearInterval(interval);
+          }
+        }, 1000);
+      }
+
+      $('.btn').on('click', function() {
+        if(!mobile) {
+          return
+        }
+
+        if(!validCode) {
+          $('.alert .content').text('请输入验证码')
+          $('.alert').show()
+          return
+        }
+
+        $.ajax({
+          url: registerUrl + "verify/sendSms?mobile=" + mobile + "&verifyCode=" + validCode,
+          type: "get",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8"
+          },
+
+          success: function(res) {
+            if (res && res.code == '0000') {
+              location.href = './last.html?mobile=' + mobile
+            } else {
+              $('.alert .content').text(res.message || '验证码验证失败')
+              $('.alert').show()
+              // alert(res.reMsg || '注册失败')
+            }
+          },
+          error: (xhr, status, error) => {
+            $('.alert .content').text("网络错误,请检查网络")
+            $('.alert').show()
+            // alert("网络错误,请检查网络");
+          }
+        });
+      });
+
+      $('.code-btn').on('click', function(e) {
+        var target = $(this);
+        if (target.hasClass("sending")) {
+          return;
+        } else {
+          $.ajax({
+            url: registerUrl + "sendSms?busiType=0&mobile=" + mobile,
+            type: "get",
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8"
+            },
+            success: function(res, status, xhr) {
+              if (res && res.code  == '0000') {
+                getCodeCallback(e);
+              } else {
+                $('.alert .content').text(res.message || '验证码发送失败')
+                $('.alert').show()
+                // alert(res.reMsg || '验证码发送失败')
+              }
+            },
+            error: (xhr, status, error) => {
+              $('.alert .content').text("网络错误,请检查网络")
+              $('.alert').show()
+              // alert("网络错误,请检查网络");
+            },
+            complete: (xhr, status) => {
+              console.log("request hide loading...");
+            }
+          });
+        }
+      });
+      
+      // getCodeCallback()
+      $('.code-btn').trigger('click')
+
+      var validCode = '';
+      var len = 0;
+      // type=tel input框
+      var $inputs = $(".surface-ipt input");
+      $(".real-ipt").on("input", function () {
+          if (!$(this).val()) {   //无值
+            $('.btn').addClass('gray')
+          }
+          if (/^[0-9]*$/g.test($(this).val())) {  //有值且只能是数字（正则）
+            $('.btn').removeClass('gray')
+            validCode = $(this).val().trim();
+              len = validCode.length;
+              for (var i in validCode) {
+                  $inputs.eq(i).val(validCode[i]);
+              }
+              $inputs.each(function () {  //将有值的当前input 后面的所有input清空
+                  var index = $(this).index();
+                  if (index >= len) {
+                      $(this).val("");
+                  }
+              })
+              if (len === 6) {
+              }
+
+          } else {    //清除val中的非数字，返回纯number的value
+              var arr = $(this).val().match(/\d/g);
+              try {
+                  $(this).val($(this).val().slice(0,$(this).val().lastIndexOf(arr[arr.length-1])+1));
+              } catch(e) {
+                  // console.log(e.message)
+                  //清空
+                  $(this).val("");
+              }
+          }
+          if (!$(this).val()) {   //无值
+            $('.btn').addClass('gray')
+          }
+          console.log("validCode:" + validCode);
+      })
+    </script>
+  </body>
+</html>
