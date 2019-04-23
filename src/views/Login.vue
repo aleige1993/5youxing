@@ -15,7 +15,7 @@
     </div>
     <div class="bottom-border row" v-if="isSms">
       <van-field v-model="sms" center placeholder="请输入短信验证码" clearable @input="inputHandler">
-        <van-button slot="button" size="small" plain type="info" @click="sendCode">发送验证码</van-button>
+        <van-button slot="button" size="small" plain type="info" @click="sendCode">{{}}</van-button>
       </van-field>
     </div>
     <van-button class="common-btn" type="info" size="large" @click="login">登 录</van-button>
@@ -39,6 +39,7 @@ export default {
   },
   data() {
     return {
+      smsText: '发送验证码',
       mobile: '',
       password: '',
       sms: '',
