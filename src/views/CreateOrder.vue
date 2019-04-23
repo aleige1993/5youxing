@@ -243,7 +243,7 @@ export default {
 
         const submitResult = await this.$postData('/store/submitOrder', this.$data.formData);
         this.$toast.clear()
-        if (typeof res === 'string' || !res) {
+        if (typeof res === 'string' || !submitResult) {
           if (submitResult === '/logout') {
             this.$store.dispatch('outLogin')
             return false

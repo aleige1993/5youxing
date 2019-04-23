@@ -448,23 +448,12 @@ export default {
         return false
       }
 
-      // const mywin = window.open(`https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx8ddfeecf1fd01033&redirect_uri=https://zucheapi.songchewang.com/user/update/member&response_type=code&scope=snsapi_base&state=${this.$store.state.user.memberNo}#wechat_redirect`, '_blank', 'height=10, width=40, top=0, left=0, toolbar=no, menubar=no, scrollbars=no, resizable=no, location=no, status=no')
-      // mywin.close()
-      // const that = this
-      // setTimeout(() => {
-      //   that.$router.push({
-      //     name: 'createOrder',
-      //     query: {
-      //       orderNo: res.orderNo,
-      //     },
-      //   }, 1000);
-      // })
       this.$router.push({
         name: 'createOrder',
         query: {
           orderNo: res.orderNo,
         },
-      }, 1000);
+      })
 
 
       return false;
@@ -558,12 +547,10 @@ export default {
       this.selectActivity(actType, actCode, actName);
     },
   },
-  created() {
-    this.initData();
-  },
+
   mounted() {
     document.body.style.backgroundColor = '#eeeeee';
-
+    this.initData();
     //      this.initTime();
   },
   beforeDestroy() {
