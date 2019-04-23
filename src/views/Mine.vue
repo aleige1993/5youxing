@@ -8,12 +8,14 @@
       <van-cell title="我的优惠券" @click="gotoPage('couponlist')" icon="coupon-o" is-link/>
       <van-cell title="我的租车订单" @click="gotoPage('orderlist')" icon="bill-o" is-link/>
       <van-cell v-if="authStatus" title="完善信息" @click="gotoPage('fillinfo')" icon="contact" is-link/>
+      <van-button class="common-btn" type="info" size="large" @click="logout">退出登录</van-button>
     </van-cell-group>
+
   </div>
 </template>
 <script>
 import {
-  Toast, CellGroup, Cell, Icon,
+  Toast, CellGroup, Cell, Icon, Button,
 } from 'vant';
 
 export default {
@@ -22,6 +24,7 @@ export default {
     [CellGroup.name]: CellGroup,
     [Cell.name]: Cell,
     [Icon.name]: Icon,
+    [Button.name]: Button,
   },
   data() {
     return {
@@ -32,6 +35,10 @@ export default {
   methods: {
     gotoPage(flag) {
       this.$router.push({ name: flag });
+    },
+    logout() {
+      this.$store.dispatch('outLogin')
+      this.$router.replace('/login')
     },
   },
   mounted() {

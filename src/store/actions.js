@@ -1,5 +1,5 @@
 
-import { loginByPwd, loginBySms } from '../config/api'
+import { loginByPwd, loginBySms, logout } from '../config/api'
 import * as types from './mutationsType';
 
 const actions = {
@@ -26,6 +26,11 @@ const actions = {
   setUserState({ commit }) {
     commit(types.SET_USERSTATUS, '0')
     commit(types.SAVE_USER)
+  },
+
+  async outLogin({ commit }) {
+    await logout()
+    commit(types.SET_USER, null)
   },
 }
 

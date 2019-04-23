@@ -1,10 +1,11 @@
 import * as types from './mutationsType';
-import { saveAllToStorage, saveUserByStorage } from '../utils/storage'
+import { saveAllToStorage, saveUserByStorage, delUserByStorage } from '../utils/storage'
 
 const mutations = {
   [types.SET_USER](state, user) {
-    if (user === null) {
+    if (!user) {
       state.user = null;
+      delUserByStorage()
       return;
     }
     state.user = { ...state.user, ...user };

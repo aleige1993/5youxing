@@ -6,7 +6,7 @@
         <van-uploader
           name="idcardFrontPic"
           :after-read="onRead"
-          accept="image/png, image/jpeg"
+          accept="image/*"
           :max-size="maxSize"
         >
           <div class="content">
@@ -20,7 +20,7 @@
         <van-uploader
           name="idcardBackPic"
           :after-read="onRead"
-          accept="image/png, image/jpeg"
+          accept="image/*"
           :max-size="maxSize"
         >
           <div class="content">
@@ -34,7 +34,7 @@
         <van-uploader
           name="handerIdcardPic"
           :after-read="onRead"
-          accept="image/png, image/jpeg"
+          accept="image/*"
           :max-size="maxSize"
         >
           <div class="content">
@@ -48,7 +48,7 @@
         <van-uploader
           name="driverFrontPic"
           :after-read="onRead"
-          accept="image/png, image/jpeg"
+          accept="image/*"
           :max-size="maxSize"
         >
           <div class="content">
@@ -62,7 +62,7 @@
         <van-uploader
           name="driverBackPic"
           :after-read="onRead"
-          accept="image/png, image/jpeg"
+          accept="image/*"
           :max-size="maxSize"
         >
           <div class="content">

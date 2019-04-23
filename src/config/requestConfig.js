@@ -52,6 +52,9 @@ const resultHandler = (res = {
   if (data.code === '0000') {
     return data.data;
   }
+  if (data.code === '0004') {
+
+  }
   // if( data.code === '9999') { // TODO: 后端给的, 表达没认证
   //   return
   // }

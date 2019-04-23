@@ -44,6 +44,10 @@ export function getToStorage(key) {
   }
 }
 
+export function clearStorage() {
+  storage.clear()
+}
+
 export function getUserByStorage() {
   return getToStorage(userKey) || null
 }
@@ -55,10 +59,10 @@ export function saveUserByStorage(val) {
   }
 }
 
-export function removeStorage(key) {
-  storage.removeItem(key)
+export function delUserByStorage() {
+  clearStorage()
 }
 
-export function clearStorage() {
-  storage.clear()
+export function removeStorage(key) {
+  storage.removeItem(key)
 }
