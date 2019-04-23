@@ -113,10 +113,8 @@
     <ul class="order-updeta">
       <li>
         实付：￥ {{storeOrderVO.totalPrice - storeOrderVO.couponAmount}}
-        <span
-          @click="send"
-          class="next-button right"
-        >发请求</span>
+        <span class="next-button right"
+        ><a href="https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx8ddfeecf1fd01033&redirect_uri=https%3A%2F%2Fzucheapi.songchewang.com%2Fuser%2Fupdate%3Fmember&response_type=code&scope=snsapi_base&state="+{{formData.orderCode}}+"#wechat_redirect"></a></span>
         <span @click="wxpay" class="next-button right">去支付</span>
       </li>
     </ul>
