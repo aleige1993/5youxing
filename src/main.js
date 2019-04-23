@@ -35,7 +35,10 @@ Vue.filter('dateFormate', (value, format) => {
   str = str.replace(/ss|SS/, currDate.getSeconds() > 9 ? currDate.getSeconds().toString() : `0${currDate.getSeconds()}`);
   str = str.replace(/s|S/g, currDate.getSeconds());
 
-  return str;
+  const agent = window.navigator.userAgent.toLowerCase();
+  const isIos = agent.indexOf('iphone') > -1
+
+  return isIos ? str.replace(/-/g, '/') : str;
 })
 
 Vue.prototype.$Tools = Tools;

@@ -22,7 +22,10 @@ function timestampToTime(timestamp, fix) {
   if (fix === 'M') {
     return `${Y}-${M}`;
   }
-  return `${Y}-${M}-${D} ${h}:${m}:${s}`;
+  const time = `${Y}-${M}-${D} ${h}:${m}:${s}`
+  const agent = window.navigator.userAgent.toLowerCase();
+  const isIos = agent.indexOf('iphone') > -1
+  return isIos ? time.replace(/-/g, '/') : time;
 }
 
 /**
@@ -30,7 +33,9 @@ function timestampToTime(timestamp, fix) {
 * @returns {string}
 */
 function formatTimeCompatibleIos(time) {
-  return time.replace(/-/g, '/');
+  const agent = window.navigator.userAgent.toLowerCase();
+  const isIos = agent.indexOf('iphone') > -1
+  return isIos ? time.replace(/-/g, '/') : time;
 }
 
 /**

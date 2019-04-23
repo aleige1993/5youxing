@@ -96,7 +96,7 @@
       </div>
     </div>
     <!--<p class="remarks">如有问题请拨打官方电话：400-045-0968</p>-->
-    <div @click="submit" v-if="!loading" class="next-button">
+    <div @click="createOrder" class="next-button">
       <div>下一步</div>
     </div>
     <!-- <div v-else class="next-button">
@@ -397,10 +397,11 @@ export default {
     //     picker.dispose();
     //   });
     // },
-    async submit() {
+    async createOrder() {
       const { memberNo } = this.$store.state.user;
       if (!memberNo) {
         // this.$nativeAppUtils.toLogin();
+        this.$router.push('/login')
         return false;
       }
       if (this.$data.formData.actType === '2') {
@@ -408,11 +409,11 @@ export default {
           this.$data.formData.startPoint === ''
           || this.$data.formData.endPoint === ''
         ) {
-          this.$message('出发地或目的地不能为空');
+          this.$toast('出发地或目的地不能为空');
           return false;
         }
         if (this.$data.formData.peopleNum === '') {
-          this.$message('请选择出行人数');
+          this.$toast('请选择出行人数');
           return false;
         }
       }
@@ -435,7 +436,7 @@ export default {
       this.$toast.clear()
       if (typeof res === 'string' || !res) {
         this.$toast(res || '请求错误')
-        return false
+        return
       }
       this.$router.push({
         name: 'createOrder',
@@ -534,7 +535,6 @@ export default {
     },
   },
   created() {
-    console.log('created');
     this.initData();
   },
   mounted() {

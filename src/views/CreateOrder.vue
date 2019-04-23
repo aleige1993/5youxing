@@ -123,7 +123,7 @@
 </template>
 
 <script>
-const wx = require('../utils/weixin-jsapi.js')
+// const wx = require('../utils/weixin-jsapi.js')
 
 export default {
   name: 'carshopleaseOrderConfirm',

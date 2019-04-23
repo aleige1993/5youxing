@@ -103,7 +103,7 @@ export default {
   },
   data() {
     return {
-      maxSize: 50000,
+      maxSize: 50 * 1000 * 1000,
       from: this.$router.currentRoute.query.redirect || '',
       userName: '',
       certNo: '',
