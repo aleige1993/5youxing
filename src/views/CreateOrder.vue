@@ -114,9 +114,10 @@
       <li>
         实付：￥ {{storeOrderVO.totalPrice - storeOrderVO.couponAmount}}
         <span
-          @click="wxpay"
+          @click="send"
           class="next-button right"
-        >去支付</span>
+        >发请求</span>
+        <span @click="wxpay" class="next-button right">去支付</span>
       </li>
     </ul>
   </div>
@@ -172,7 +173,7 @@ export default {
           const res = await that.$postData('/store/orderDiscount', {
             ...this.$data.formData,
           });
-          that.$toast.clear()
+          that.$toast.clear();
           that.$data.storeOrderVO.couponAmount = res;
         } else {
           that.$data.storeOrderVO.couponAmount = '0.00';
@@ -236,9 +237,24 @@ export default {
 
     async wxpay() {
       try {
-        this.wxconfig();
         // 这里是后端要你传的参数
         if (wx) {
+          this.$toast.loading({
+            duration: 0,
+            forbidClick: true, // 禁用背景点击
+            loadingType: 'spinner',
+            message: '加载中',
+          });
+          // 这里如果后端要url 是#前面的部分不包括#号
+          const res = await this.$getData('wx/js/sdk/init');
+          wx.config({
+            debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+            appId: this.wxParams.appid, // 必填，公众号的唯一标识
+            timestamp: res.timestamp, // 必填，生成签名的时间戳
+            nonceStr: res.nonceStr, // 必填，生成签名的随机串
+            signature: res.signature, // 必填，签名，见附录1
+            jsApiList: ['chooseWXPay'],
+          });
           const data = await this.$postData('wx/pay', {
             orderNo: this.formData.orderCode,
           });
@@ -250,9 +266,9 @@ export default {
               package: `prepay_id=${args.repay_id}`, // 统一支付接口返回的prepay_id参数值，提交格式如：prepay_id=***）
               signType: 'MD5', // 签名方式，默认为'SHA1'，使用新版支付需传入'MD5'
               paySign: args.paySign, // 支付签名
-              success(res) {
+              success(result) {
                 // 这里写成功后的动作 我试过跳转路由好像不灵 或者是执行太快后端处理订单未变化呢 我改成了这个   window.location.href="你所要跳转的页面";
-                this.$toast(res);
+                this.$toast(result);
               },
               cancel() {
                 this.$toast('已取消支付');
@@ -267,38 +283,17 @@ export default {
         this.$toast(e);
       }
     },
-
-    async wxconfig() {
-      if (wx) {
-        this.$toast.loading({
-          duration: 0,
-          forbidClick: true, // 禁用背景点击
-          loadingType: 'spinner',
-          message: '加载中',
-        });
-        // 这里如果后端要url 是#前面的部分不包括#号
-        $.get(
-          `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${
-            this.wxParams.appid
-          }&redirect_uri=https%3A%2F%2Fzucheapi.songchewang.com%2Fuser%2Fupdate%3Fmember&response_type=code&scope=snsapi_base&state=${
-            this.formData.orderCode
-          }#wechat_redirect`,
-        );
-        const data = await this.$getData('wx/js/sdk/init');
-        wx.config({
-          debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
-          appId: this.wxParams.appid, // 必填，公众号的唯一标识
-          timestamp: data.timestamp, // 必填，生成签名的时间戳
-          nonceStr: data.nonceStr, // 必填，生成签名的随机串
-          signature: data.signature, // 必填，签名，见附录1
-          jsApiList: ['chooseWXPay'],
-        });
-      }
-    },
   },
   mounted() {
     document.body.style.backgroundColor = '#eeeeee';
     this.initData();
+    $.get(
+      `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${
+        this.wxParams.appid
+      }&redirect_uri=https%3A%2F%2Fzucheapi.songchewang.com%2Fuser%2Fupdate%3Fmember&response_type=code&scope=snsapi_base&state=${
+        this.formData.orderCode
+      }#wechat_redirect`,
+    );
   },
 };
 </script>
