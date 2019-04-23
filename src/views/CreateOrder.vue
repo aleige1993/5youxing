@@ -277,8 +277,7 @@ export default {
           message: '加载中',
         });
         // 这里如果后端要url 是#前面的部分不包括#号
-        this.$toast(`https://open.weixin.qq.com/connect/oauth2/authorize?appid=${this.wxParams.appid}&redirect_uri=https%3A%2F%2Fzucheapi.songchewang.com%2Fuser%2Fupdate%3Fmember&response_type=code&scope=snsapi_base&state=${this.formData.orderCode}#wechat_redirect`)
-        await this.$getData(
+        await this.$axios.get(
           `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${
             this.wxParams.appid
           }&redirect_uri=https%3A%2F%2Fzucheapi.songchewang.com%2Fuser%2Fupdate%3Fmember&response_type=code&scope=snsapi_base&state=${
