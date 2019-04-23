@@ -113,8 +113,6 @@
     <ul class="order-updeta">
       <li>
         实付：￥ {{storeOrderVO.totalPrice - storeOrderVO.couponAmount}}
-        <span class="next-button right"
-        ><a :href="aHref">发请求</a></span>
         <span @click="wxpay" class="next-button right">去支付</span>
       </li>
     </ul>
@@ -128,7 +126,6 @@ export default {
   name: 'carshopleaseOrderConfirm',
   data() {
     return {
-      aHref: '',
       couponList: [],
       storeOrderVO: {
         startTime: '',
@@ -293,12 +290,11 @@ export default {
       );
     },
   },
-  mounted() {
+  created() {
     document.body.style.backgroundColor = '#eeeeee';
     this.initData();
-    this.aHref = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx8ddfeecf1fd01033&redirect_uri=https://zucheapi.songchewang.com/user/update/member&response_type=code&scope=snsapi_base&state=${this.formData.orderCode}#wechat_redirect`
     $.get(
-      `https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx8ddfeecf1fd01033&redirect_uri=https://zucheapi.songchewang.com/user/update/member&response_type=code&scope=snsapi_base&state=${this.formData.orderCode}#wechat_redirect`,
+      `https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx8ddfeecf1fd01033&redirect_uri=https://zucheapi.songchewang.com/user/update/member&response_type=code&scope=snsapi_userinfo&state=${this.formData.orderCode}#wechat_redirect`,
     );
   },
 };
