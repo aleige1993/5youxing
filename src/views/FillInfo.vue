@@ -180,6 +180,10 @@ export default {
       })
       this.$toast.clear()
       if (typeof res === 'string' || !res) {
+        if (res === '/logout') {
+          this.$store.dispatch('outLogin')
+          return
+        }
         this.$toast(res || '请求失败')
         return
       }

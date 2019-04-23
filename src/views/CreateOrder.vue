@@ -22,7 +22,7 @@
       <em class="boxbor-right"></em>
     </div>
     <div class="tiem">
-      预约时间：{{storeOrderVO.startTime.substring(0, 16)}} 至 {{storeOrderVO.endTime.substring(0, 16)}}
+      预约时间：{{storeOrderVO.startTime | dateFormate('YYYY-MM-dd hh:00')}} 至 {{storeOrderVO.endTime | dateFormate('YYYY-MM-dd hh:00')}}
       <br>
       <span v-if="storeOrderVO.actType === '2'">
         出发地点：{{storeOrderVO.startPoint}}
@@ -163,10 +163,17 @@ export default {
         that.$data.formData.couponName = items[0].couponName;
         if (that.$data.formData.couponCode) {
           that.$data.formData.couponOrderId = items[0].id / 1;
+          that.$toast.loading({
+            duration: 0,
+            forbidClick: true, // 禁用背景点击
+            loadingType: 'spinner',
+            message: '加载中',
+          });
           const res = await that.$postData('/store/orderDiscount', {
             ...this.$data.formData,
           });
-          that.$data.storeOrderVO.couponAmount = res.body;
+          that.$toast.clear()
+          that.$data.storeOrderVO.couponAmount = res;
         } else {
           that.$data.storeOrderVO.couponAmount = '0.00';
         }
@@ -200,6 +207,10 @@ export default {
       );
       this.$toast.clear();
       if (typeof res === 'string' || !res) {
+        if (res === '/logout') {
+          this.$store.dispatch('outLogin');
+          return false;
+        }
         this.$toast(res || '请求错误');
         return false;
       }
@@ -220,14 +231,17 @@ export default {
       this.$data.storeOrderVO = res.storeOrderVO;
       this.$data.storeVo = res.storeVo;
       this.$data.carVo = res.carVo;
+      return false;
     },
 
     async wxpay() {
       try {
-        this.wxconfig()
+        this.wxconfig();
         // 这里是后端要你传的参数
         if (wx) {
-          const data = await this.$postData('wx/pay', { orderNo: this.formData.orderCode });
+          const data = await this.$postData('wx/pay', {
+            orderNo: this.formData.orderCode,
+          });
           const args = data;
           wx.ready(() => {
             wx.chooseWXPay({
@@ -238,7 +252,7 @@ export default {
               paySign: args.paySign, // 支付签名
               success(res) {
                 // 这里写成功后的动作 我试过跳转路由好像不灵 或者是执行太快后端处理订单未变化呢 我改成了这个   window.location.href="你所要跳转的页面";
-                this.$toast(res)
+                this.$toast(res);
               },
               cancel() {
                 this.$toast('已取消支付');
@@ -250,7 +264,7 @@ export default {
           });
         }
       } catch (e) {
-        this.$toast(e)
+        this.$toast(e);
       }
     },
 

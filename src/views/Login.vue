@@ -101,6 +101,10 @@ export default {
       console.log(res);
       this.$toast.clear()
       if (typeof res === 'string') {
+        if (res === '/logout') {
+          this.$store.dispatch('outLogin')
+          return
+        }
         this.$toast(res)
         return
       }

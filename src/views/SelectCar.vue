@@ -431,12 +431,20 @@ export default {
       this.$data.formData.carCode = this.carInfo.carsCode;
       const res = await this.$postData(
         '/store/createOrder',
-        { ...this.formData },
+        {
+          ...this.formData,
+          startTime: this.formData.startTime.replace(/\//g, '-'),
+          endTime: this.formData.endTime.replace(/\//g, '-'),
+        },
       );
       this.$toast.clear()
       if (typeof res === 'string' || !res) {
+        if (res === '/logout') {
+          this.$store.dispatch('outLogin')
+          return false
+        }
         this.$toast(res || '请求错误')
-        return
+        return false
       }
       this.$router.push({
         name: 'createOrder',

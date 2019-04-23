@@ -19,6 +19,6 @@ export function loginBySms(user = { mobile: '', verifyCode: '' }) {
 /**
  * 注销
  */
-export function logout() {
-  return postData('user/logout')
+export function logout(token) {
+  return postData('user/logout', { token })
 }

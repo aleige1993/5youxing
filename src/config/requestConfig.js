@@ -53,7 +53,7 @@ const resultHandler = (res = {
     return data.data;
   }
   if (data.code === '0004') {
-
+    return '/logout'
   }
   // if( data.code === '9999') { // TODO: 后端给的, 表达没认证
   //   return

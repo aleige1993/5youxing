@@ -28,8 +28,8 @@ const actions = {
     commit(types.SAVE_USER)
   },
 
-  async outLogin({ commit }) {
-    await logout()
+  async outLogin({ commit }, token) {
+    await logout(token)
     commit(types.SET_USER, null)
   },
 }

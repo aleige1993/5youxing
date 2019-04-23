@@ -37,7 +37,7 @@ export default {
       this.$router.push({ name: flag });
     },
     logout() {
-      this.$store.dispatch('outLogin')
+      this.$store.dispatch('outLogin', this.$store.state.user.token)
       this.$router.replace('/login')
     },
   },
