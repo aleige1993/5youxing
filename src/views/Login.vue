@@ -15,7 +15,7 @@
     </div>
     <div class="bottom-border row" v-if="isSms">
       <van-field v-model="sms" center placeholder="请输入短信验证码" clearable @input="inputHandler">
-        <van-button slot="button" size="small" plain type="info" @click="sendCode">{{}}</van-button>
+        <van-button slot="button" size="small" plain type="info" @click="sendCode">{{smsText}}</van-button>
       </van-field>
     </div>
     <van-button class="common-btn" type="info" size="large" @click="login">登 录</van-button>
@@ -28,6 +28,7 @@
 <script>
 import SparkMD5 from 'spark-md5';
 import { Field, Button, Toast } from 'vant';
+import { setInterval } from 'timers';
 import Logo from '../components/Logo.vue';
 
 export default {
@@ -45,6 +46,7 @@ export default {
       sms: '',
       isSms: false,
       from: this.$router.currentRoute.query.redirect || '',
+      freez: false,
     };
   },
   computed: {
@@ -112,9 +114,32 @@ export default {
       // this.$router.replace(this.from ? this.from : '/main/car')
       location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx8ddfeecf1fd01033&redirect_uri=https://zucheapi.songchewang.com/user/update/member&response_type=code&scope=snsapi_base&state=${res.memberNo}#wechat_redirect`
     },
-  },
-  mounted() {
-    console.log(this.$router);
+    async sendCode() {
+      if (this.freez) {
+        return
+      }
+
+      const res = await this.$postData('user/sendSms', { mobile: this.mobile, busiType: 1 })
+      if (typeof res === 'string') {
+        this.$toast(res || '请求错误')
+        return
+      }
+
+      this.freez = true
+
+      let count = 60;
+      const that = this;
+      const interval = setInterval(() => {
+        if (count > 0) {
+          count -= 1;
+          that.smsText = `${count}s后重发`
+        } else {
+          that.smsText = '获取验证码'
+          clearInterval(interval);
+          that.freez = false
+        }
+      }, 1000);
+    },
   },
 };
 </script>

@@ -71,6 +71,24 @@ const router = new Router({
       },
     },
     {
+      path: '/success',
+      name: 'success',
+      title: '下单成功',
+      component: () => import(/* webpackChunkName: "fill" */ './views/OrderSuccess.vue'),
+      meta: {
+        requiresAuth: true,
+      },
+    },
+    {
+      path: '/successpay',
+      name: 'successpay',
+      title: '支付成功',
+      component: () => import(/* webpackChunkName: "fill" */ './views/PaySuccess.vue'),
+      meta: {
+        requiresAuth: true,
+      },
+    },
+    {
       path: '/',
       redirect: '/main',
     },

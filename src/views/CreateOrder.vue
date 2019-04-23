@@ -234,69 +234,60 @@ export default {
     async wxpay() {
       try {
         // 这里是后端要你传的参数
-        if (wx) {
-          this.$toast.loading({
-            duration: 0,
-            forbidClick: true, // 禁用背景点击
-            loadingType: 'spinner',
-            message: '加载中',
-          });
+        this.$toast.loading({
+          duration: 0,
+          forbidClick: true, // 禁用背景点击
+          loadingType: 'spinner',
+          message: '加载中',
+        });
 
-          // const submitResult = await this.$postData('/store/submitOrder', this.$data.formData);
-          // if(submitResult)
-          // 这里如果后端要url 是#前面的部分不包括#号
-          const res = await this.$getData('wx/js/sdk/init');
-          // wx.config({
-          //   debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
-          //   appId: this.wxParams.appid, // 必填，公众号的唯一标识
-          //   timestamp: res.timestamp, // 必填，生成签名的时间戳
-          //   nonceStr: res.nonceStr, // 必填，生成签名的随机串
-          //   signature: res.signature, // 必填，签名，见附录1
-          //   jsApiList: ['chooseWXPay'],
-          // });
-          const data = await this.$postData('wx/pay', {
-            orderNo: this.formData.orderCode,
-          });
-          const args = data;
-          alert(JSON.stringify(args))
-          // wx.ready(() => {
-          //   wx.chooseWXPay({
-          //     appId: args.appId,
-          //     timestamp: args.timeStamp, // 支付签名时间戳，注意微信jssdk中的所有使用timestamp字段均为小写。但最新版的支付后台生成签名使用的timeStamp字段名需大写其中的S字符
-          //     nonceStr: args.nonceStr, // 支付签名随机串，不长于 32 位
-          //     package: `${args.repay_id}`, // 统一支付接口返回的prepay_id参数值，提交格式如：prepay_id=***）
-          //     signType: 'MD5', // 签名方式，默认为'SHA1'，使用新版支付需传入'MD5'
-          //     paySign: args.paySign, // 支付签名
-          //     success(result) {
-          //       // 这里写成功后的动作 我试过跳转路由好像不灵 或者是执行太快后端处理订单未变化呢 我改成了这个   window.location.href="你所要跳转的页面";
-          //       this.$toast(result);
-          //     },
-          //     cancel() {
-          //       this.$toast('已取消支付');
-          //     },
-          //     fail() {
-          //       this.$toast('购买失败，请重新创建订单');
-          //     },
-          //   });
-          // });
-          WeixinJSBridge.invoke(
-            'getBrandWCPayRequest', {
-              appId: args.appId,
-              timeStamp: args.timeStamp, // 支付签名时间戳，注意微信jssdk中的所有使用timestamp字段均为小写。但最新版的支付后台生成签名使用的timeStamp字段名需大写其中的S字符
-              nonceStr: args.nonceStr, // 支付签名随机串，不长于 32 位
-              package: `${args.repay_id}`, // 统一支付接口返回的prepay_id参数值，提交格式如：prepay_id=***）
-              signType: 'MD5', // 签名方式，默认为'SHA1'，使用新版支付需传入'MD5'
-              paySign: args.paySign, // 支付签名
-            },
-            (wxRes) => {
-              alert(JSON.stringify(wxRes))
-              if (wxRes.err_msg === 'get_brand_wcpay_request:ok') {
-                // 使用以上方式判断前端返回,微信团队郑重提示：
-                // res.err_msg将在用户支付成功后返回ok，但并不保证它绝对可靠。
-              }
-            },
-          );
+        const submitResult = await this.$postData('/store/submitOrder', this.$data.formData);
+        this.$toast.clear()
+        if (typeof res === 'string' || !res) {
+          if (submitResult === '/logout') {
+            this.$store.dispatch('outLogin')
+            return false
+          }
+          this.$toast(submitResult || '请求错误')
+          return false
         }
+        this.$router.push({
+          name: 'success',
+          query: {
+            orderNo: this.$data.formData.orderCode,
+          },
+        });
+        // 这里如果后端要url 是#前面的部分不包括#号
+
+        // wx.config({
+        //   debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+        //   appId: this.wxParams.appid, // 必填，公众号的唯一标识
+        //   timestamp: res.timestamp, // 必填，生成签名的时间戳
+        //   nonceStr: res.nonceStr, // 必填，生成签名的随机串
+        //   signature: res.signature, // 必填，签名，见附录1
+        //   jsApiList: ['chooseWXPay'],
+        // });
+
+        // wx.ready(() => {
+        //   wx.chooseWXPay({
+        //     appId: args.appId,
+        //     timestamp: args.timeStamp, // 支付签名时间戳，注意微信jssdk中的所有使用timestamp字段均为小写。但最新版的支付后台生成签名使用的timeStamp字段名需大写其中的S字符
+        //     nonceStr: args.nonceStr, // 支付签名随机串，不长于 32 位
+        //     package: `${args.repay_id}`, // 统一支付接口返回的prepay_id参数值，提交格式如：prepay_id=***）
+        //     signType: 'MD5', // 签名方式，默认为'SHA1'，使用新版支付需传入'MD5'
+        //     paySign: args.paySign, // 支付签名
+        //     success(result) {
+        //       // 这里写成功后的动作 我试过跳转路由好像不灵 或者是执行太快后端处理订单未变化呢 我改成了这个   window.location.href="你所要跳转的页面";
+        //       this.$toast(result);
+        //     },
+        //     cancel() {
+        //       this.$toast('已取消支付');
+        //     },
+        //     fail() {
+        //       this.$toast('购买失败，请重新创建订单');
+        //     },
+        //   });
+        // });
       } catch (e) {
         this.$toast(e);
       }
