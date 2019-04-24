@@ -1,6 +1,28 @@
+import { Button } from 'vant';
 
 <template>
   <div class="confirm-order">
+    <div class="detail-panl border-bottom">
+      <ul class="shop-details">
+        <li class="flex-space">
+          <span>订单编号: {{storeOrderVO.orderCode}}</span>
+          <span>
+            <span v-if="storeOrderVO.orderState === '1'" class="col-blue">待接单</span>
+            <span v-if="storeOrderVO.orderState === '2'" class="col-blue">已预约</span>
+            <span v-if="storeOrderVO.orderState === '3'" class="col-blue">使用中</span>
+            <span v-if="storeOrderVO.orderState === '4'" class="col-blue">已完成</span>
+            <span v-if="storeOrderVO.orderState === '7'" class="col-blue">待支付</span>
+            <span v-if="storeOrderVO.orderState === '10'" class="col-blue">已退款</span>
+            <span v-if="storeOrderVO.orderState === '99'" class="col-gray">已取消</span>
+          </span>
+        </li>
+        <li>
+          <span>下单时间: {{storeOrderVO.gmtCreate | dateFormate('YYYY-MM-dd hh:mm:ss')}}</span>
+        </li>
+      </ul>
+      <em class="boxbor-left"></em>
+      <em class="boxbor-right"></em>
+    </div>
     <div class="detail-panl">
       <ul class="shop-details">
         <li>
@@ -18,20 +40,10 @@
           </span>
         </li>
       </ul>
-      <em class="boxbor-left"></em>
-      <em class="boxbor-right"></em>
     </div>
     <div class="tiem">
       预约时间：{{storeOrderVO.startTime | dateFormate('YYYY-MM-dd hh:00')}} 至 {{storeOrderVO.endTime | dateFormate('YYYY-MM-dd hh:00')}}
       <br>
-      <span v-if="storeOrderVO.actType === '2'">
-        出发地点：{{storeOrderVO.startPoint}}
-        <br>
-        目的地点：{{storeOrderVO.endPoint}}
-        <br>
-        出行人数：{{storeOrderVO.peopleNum}}人
-        <br>
-      </span>
     </div>
     <div class="user-info">
       <ul>
@@ -60,138 +72,110 @@
       <em class="boxbor-right"></em>
     </div>
     <ul class="order-info">
-      <li>
-        <p>
-          <img src="../assets/coupon.png">支付方式
-        </p>
-        <span class="col999">微信支付</span>
-      </li>
-      <li v-if="storeOrderVO.actType === '2'" class="conactiv">
-        <p>
-          <img src="../assets/pay.png">活动优惠
-        </p>
-        <span>免费接送</span>
-      </li>
-      <li v-if="storeOrderVO.actType === '1'" class="conactiv">
-        <p>
-          <img src="../assets/pay.png">活动优惠
-        </p>
-        <span>租4免1</span>
-      </li>
-      <li v-if="storeOrderVO.actType === '0'" class="conactiv">
-        <p>
-          <img src="../assets/pay.png">优惠券
-        </p>
-        <span @click="selectCoupon" v-if="couponList && couponList.length">
-          <span v-if="!formData.couponName" class="col999">请选择</span>
-          <span v-else>{{formData.couponName}}</span>
-          <img src="../assets/right.png">
-        </span>
-        <span v-else class="col999">暂无优惠券可用</span>
-      </li>
-      <li>
-        <p>
-          <img src="../assets/coupon.png">车辆租赁费
-        </p>
-        <span class="col999">￥ {{storeOrderVO.rentalPrice}}元</span>
-      </li>
-      <li>
-        <p>
-          <img src="../assets/coupon.png">保险费
-        </p>
-        <span class="col999">￥ {{storeOrderVO.bxPrice}}元</span>
-      </li>
       <li class="conpue">
         <span class="col999">优惠￥{{storeOrderVO.couponAmount}}</span>
-        <span>
-          总价￥
-          <a>{{storeOrderVO.totalPrice}}</a>
-        </span>
+        <span><a class="total">总价 ￥{{storeOrderVO.totalPrice}}</a></span>
+      </li>
+      <li class="conpue">
+        <span><a class="real">实付 ￥{{storeOrderVO.orderPrice}}</a></span>
       </li>
     </ul>
 
-    <ul class="order-updeta">
-      <li>
-        实付：￥ {{storeOrderVO.totalPrice - storeOrderVO.couponAmount}}
-        <span @click="wxpay" class="next-button right">去支付</span>
-      </li>
-    </ul>
+    <van-button
+      v-if="storeOrderVO.orderState === '7'"
+      class="common-btn"
+      type="info"
+      size="large"
+      @click="wxpay"
+    >去支付</van-button>
+    <van-button
+      v-if="storeOrderVO.orderState === '1' || storeOrderVO.orderState === '2'"
+      class="common-btn"
+      type="info"
+      size="large"
+      @click="refund"
+    >退款</van-button>
   </div>
 </template>
 
 <script>
-// const wx = require('../utils/weixin-jsapi.js')
+import { Button } from 'vant';
 
 export default {
-  name: 'carshopleaseOrderConfirm',
+  components: {
+    [Button.name]: Button,
+  },
   data() {
     return {
       couponList: [],
       storeOrderVO: {
-        startTime: '',
-        endTime: '',
+        actCode: '',
+        actName: '',
+        actType: '0',
+        bxPrice: 0,
+        carCode: '',
+        carDetailCode: '',
+        couponAmount: 0,
+        couponCode: '',
+        couponName: '',
+        createUserCode: '',
+        duration: '',
+        endPoint: '',
+        endTime: 0,
+        gmtCreate: 0,
+        gmtModified: 0,
+        id: 0,
+        invoiceAddr: '',
+        invoiceHeader: '',
+        invoiceName: '',
+        invoiceNo: '',
+        invoiceStatus: '',
+        invoiceType: '1',
+        invoiceUserMobile: '',
+        invoiceUserName: '',
+        memberMobile: '',
+        memberName: '',
+        memberNo: '',
+        modifiedUserCode: '',
+        orderCode: '',
+        orderPrice: 4600,
+        orderState: '7',
+        paymentType: '2',
+        peopleNum: 0,
+        remark: '',
+        rentalPrice: 4000,
+        returnStoreCode: '',
+        startPoint: '',
+        startTime: 1556207053000,
+        storeNo: '120002',
+        taxNo: '',
+        totalPrice: 4600,
       },
       storeVo: {},
       carVo: {},
-      formData: {
-        orderCode: this.$route.query.orderNo,
-        paymentType: '1',
-        couponName: '',
-        couponCode: '',
-        couponOrderId: '',
-        invoiceType: '1',
-      },
-      loading: false,
-      wxParams: {
-        appid: 'wx8ddfeecf1fd01033',
-      },
+      orderNo: this.$route.query.orderNo,
     };
   },
   methods: {
-    // callPhone(number) {
-    //   this.$nativeAppUtils.callPhone(number);
-    // },
-    selectCoupon() {
-      const that = this;
-      const picker = new mui.PopPicker();
-      picker.setData(this.$data.couponList);
-      picker.show(async (items) => {
-        that.$data.formData.couponCode = items[0].couponCode;
-        that.$data.formData.couponName = items[0].couponName;
-        if (that.$data.formData.couponCode) {
-          that.$data.formData.couponOrderId = items[0].id / 1;
-          that.$toast.loading({
-            duration: 0,
-            forbidClick: true, // 禁用背景点击
-            loadingType: 'spinner',
-            message: '加载中',
-          });
-          const res = await that.$postData('/store/orderDiscount', {
-            ...this.$data.formData,
-          });
-          that.$toast.clear();
-          that.$data.storeOrderVO.couponAmount = res;
-        } else {
-          that.$data.storeOrderVO.couponAmount = '0.00';
-        }
+    async refund() {
+      this.$toast.loading({
+        duration: 0,
+        forbidClick: true, // 禁用背景点击
+        loadingType: 'spinner',
+        message: '加载中',
       });
+      const res = await this.$postData(`wx/refund?orderNo=${this.orderNo}`);
+      console.log(res);
+
+      this.$toast.clear();
+      if (typeof res === 'string') {
+        if (res === '/logout') {
+          this.$store.dispatch('outLogin');
+          return;
+        }
+        this.$toast(res);
+      }
     },
-    // async submit() {
-    //   this.$data.loading = true;
-    //   const res = await this.$postData('/store/submitOrder', this.$data.formData);
-    //   this.$data.loading = false;
-    //   if (res.success && res.success === 'true') {
-    //     //          this.$router.push({
-    //     //            name: 'carShopLeaseOrderSuccess',
-    //     //            query: {
-    //     //              orderNo: this.$data.formData.orderCode
-    //     //            }
-    //     //          });
-    //     window.location.replace(`/#/carlease/order/success?orderNo=${this.$data.formData.orderCode}`);
-    //   } else {
-    //     this.$Tools.layerOpen(res.reMsg);
-    //   }
-    // },
     async initData() {
       this.$toast.loading({
         duration: 0,
@@ -200,8 +184,11 @@ export default {
         message: '加载中',
       });
       const res = await this.$postData(
-        `/store/getDetail?orderNo=${this.$data.formData.orderCode}`,
+        `/store/getDetail?orderNo=${this.orderNo}`,
       );
+      this.storeOrderVO = res.storeOrderVO;
+      this.carVo = res.carVo;
+      this.storeVo = res.storeVo
       this.$toast.clear();
       if (typeof res === 'string' || !res) {
         if (res === '/logout') {
@@ -223,22 +210,41 @@ export default {
           message: '加载中',
         });
 
-        const submitResult = await this.$postData('/store/submitOrder', this.$data.formData);
-        this.$toast.clear()
-        if (typeof res === 'string' || !submitResult) {
-          if (submitResult === '/logout') {
-            this.$store.dispatch('outLogin')
-            return false
-          }
-          this.$toast(submitResult || '请求错误')
-          return false
-        }
-        this.$router.push({
-          name: 'success',
-          query: {
-            orderNo: this.$data.formData.orderCode,
-          },
+        const args = await this.$postData('wx/pay', {
+          orderNo: this.orderNo,
         });
+
+        this.$toast.clear();
+        if (typeof args === 'string' || !args) {
+          if (args === '/logout') {
+            this.$store.dispatch('outLogin');
+            return false;
+          }
+          this.$toast(args || '请求错误');
+          return false;
+        }
+
+        const that = this;
+        if (WeixinJSBridge) {
+          WeixinJSBridge.invoke(
+            'getBrandWCPayRequest',
+            {
+              appId: args.appId,
+              timeStamp: args.timeStamp, // 支付签名时间戳，注意微信jssdk中的所有使用timestamp字段均为小写。但最新版的支付后台生成签名使用的timeStamp字段名需大写其中的S字符
+              nonceStr: args.nonceStr, // 支付签名随机串，不长于 32 位
+              package: `${args.repay_id}`, // 统一支付接口返回的prepay_id参数值，提交格式如：prepay_id=***）
+              signType: 'MD5', // 签名方式，默认为'SHA1'，使用新版支付需传入'MD5'
+              paySign: args.paySign, // 支付签名
+            },
+            (wxRes) => {
+              if (wxRes.err_msg === 'get_brand_wcpay_request:ok') {
+                // 使用以上方式判断前端返回,微信团队郑重提示：
+                // res.err_msg将在用户支付成功后返回ok，但并不保证它绝对可靠。
+                that.$router.replace('/successpay');
+              }
+            },
+          );
+        }
         // 这里如果后端要url 是#前面的部分不包括#号
 
         // wx.config({
@@ -275,10 +281,9 @@ export default {
       }
     },
   },
-  mounted() {
+  created() {
     document.body.style.backgroundColor = '#eeeeee';
     this.initData();
-    // $.get(`https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx8ddfeecf1fd01033&redirect_uri=https://zucheapi.songchewang.com/user/update/member&response_type=code&scope=snsapi_base&state=${this.$store.state.user.memberNo}#wechat_redirect`);
   },
 };
 </script>
@@ -286,20 +291,25 @@ export default {
 <style lang="less" scoped>
 .confirm-order {
   padding: 0.4rem 0.4rem 2.4rem;
+  .common-btn {
+    margin-top: 30px;
+  }
 }
 .detail-panl {
   background-color: #fff;
   border-top-left-radius: 0.2rem;
   border-top-right-radius: 0.2rem;
   position: relative;
+
   em {
     position: absolute;
-    top: 0.65rem;
+    bottom: -0.2rem;
     width: 0.5rem;
     height: 0.5rem;
     display: inline-block;
     background-color: #eee;
     border-radius: 100%;
+    z-index: 2;
   }
   em.boxbor-left {
     left: -0.25rem;
@@ -325,6 +335,12 @@ export default {
   }
   .shop-details li {
     margin-bottom: 0.3rem;
+    .col-blue {
+      color: #3984ff;
+    }
+    .col-gray {
+      color: #ddd;
+    }
     span {
       color: #333;
     }
@@ -388,12 +404,13 @@ export default {
   position: relative;
   em {
     position: absolute;
-    top: 1.2rem;
+    bottom: -0.2rem;
     width: 0.5rem;
     height: 0.5rem;
     display: inline-block;
     background-color: #eee;
     border-radius: 100%;
+    z-index: 2;
   }
   em.boxbor-left {
     left: -0.25rem;
@@ -525,11 +542,11 @@ export default {
     border: none;
   }
   li {
-    padding: 0.5rem;
+    padding: 0.3rem 0.5rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    border-bottom: 1px solid #e5e5e5;
+    // border-bottom: 1px solid #e5e5e5;
     .right {
       float: right;
     }
@@ -567,9 +584,16 @@ export default {
   font-size: 0.35rem;
 }
 .conpue span a {
-  font-size: 0.6rem;
-  font-weight: 600;
+  font-size: 0.4rem;
   color: #3984ff;
+  &.total {
+    text-decoration: line-through;
+    padding: 0 8px;
+  }
+  &.real{
+    font-weight: 600;
+    font-size: 0.45rem;
+  }
 }
 .order-updeta {
   position: fixed;

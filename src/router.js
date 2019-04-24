@@ -51,17 +51,15 @@ const router = new Router({
       meta: {
         requiresAuth: true,
       },
-      children: [
-        {
-          path: 'detail',
-          name: 'orderDetail',
-          title: '订单详情',
-          component: () => import(/* webpackChunkName: "coupon" */ './views/OrderDetail.vue'),
-          meta: {
-            requiresAuth: true,
-          },
-        },
-      ],
+    },
+    {
+      path: '/orderDetail',
+      name: 'orderDetail',
+      title: '订单详情',
+      component: () => import(/* webpackChunkName: "coupon" */ './views/OrderDetail.vue'),
+      meta: {
+        requiresAuth: true,
+      },
     },
     {
       path: '/couponlist',

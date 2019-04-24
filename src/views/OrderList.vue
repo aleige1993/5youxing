@@ -9,7 +9,7 @@
           <ul
             @tap="toDetail(list.orderCode)"
             v-for="list in orderList"
-            :key="list.actName"
+            :key="list.orderCode"
             class="list-panl"
           >
             <li>
@@ -37,10 +37,10 @@
               <p class="col-999">下单时间：{{list.gmtModified}}</p>
               <p class="col-999">实付金额：￥{{list.orderPrice}}</p>
             </li>
-            <li class="refund">
+            <!-- <li class="refund">
               <span v-if="list.orderState === '1' || list.orderState === '2'" class="col-blue" @tap.stop="refund(list.orderCode)">退款</span>
-              <!-- <span v-if="list.orderState === '7'" class="col-blue" @tap.stop="goPay(list.orderCode)">去支付</span> -->
-            </li>
+              <span v-if="list.orderState === '7'" class="col-blue" @tap.stop="goPay(list.orderCode)">去支付</span>
+            </li> -->
           </ul>
         </div>
       </div>
@@ -50,7 +50,6 @@
 
 <script>
 export default {
-  name: '',
   data() {
     return {
       orderList: [],
@@ -59,37 +58,21 @@ export default {
   methods: {
     toDetail(orderNo) {
       this.$router.push({
-        name: 'createOrder',
+        name: 'orderDetail',
         query: {
           orderNo,
         },
       });
     },
-    goPay(orderNo) {
-      this.$router.push({
-        name: 'success',
-        query: {
-          orderNo,
-        },
-      });
-    },
-    async refund(orderNo) {
-      this.$toast.loading({
-        duration: 0,
-        forbidClick: true, // 禁用背景点击
-        loadingType: 'spinner',
-        message: '加载中',
-      });
-      const res = await this.$postData(`wx/refund?orderNo=${orderNo}`)
-      this.$toast.clear()
-      if (typeof res === 'string') {
-        if (res === '/logout') {
-          this.$store.dispatch('outLogin')
-          return
-        }
-        this.$toast(res)
-      }
-    },
+    // goPay(orderNo) {
+    //   this.$router.push({
+    //     name: 'success',
+    //     query: {
+    //       orderNo,
+    //     },
+    //   });
+    // },
+
     async initData() {
       this.$toast.loading({
         duration: 0,

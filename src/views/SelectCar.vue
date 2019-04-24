@@ -271,7 +271,6 @@ export default {
       const beginDateTime = type === 'startTime' ? formatTimeCompatibleIos(timestampToTime(new Date())) : formatTimeCompatibleIos(this.$data.formData.startTime)
       const dtPickerType = 'hour' // type === 'startTime' ? 'datetime' : 'date';
       console.log('beginDateTime', beginDateTime)
-      alert(beginDateTime)
       const dtPicker = new mui.DtPicker({
         type: dtPickerType,
         beginYear: year,
@@ -433,7 +432,7 @@ export default {
           return false;
         }
       }
-      if (!this.validateTime()) {
+      if (!this.validateTime(this.formData.startTime, this.formData.endTime)) {
         return false;
       }
       this.$toast.loading({
