@@ -3,7 +3,7 @@
  * @Author: jobscq
  * @LastEditors: jobscq
  * @Date: 2019-04-12 15:48:31
- * @LastEditTime: 2019-04-21 17:42:49
+ * @LastEditTime: 2019-04-24 17:57:51
  -->
  <!DOCTYPE >
  <html>
@@ -165,8 +165,8 @@
         // } else {
         //   location.href = './register.html'
         // }
-        location.href = '/#'
-        
+        // location.href = '/#'
+        location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx8ddfeecf1fd01033&redirect_uri=https://zucheapi.songchewang.com/user/update/member&response_type=code&scope=snsapi_base&state=${res.memberNo}#wechat_redirect`
       })
 
       $('.dialog .click').on('click', function() {

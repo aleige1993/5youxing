@@ -186,7 +186,8 @@ export default {
       if (this.$data.formData.actType === '2') {
         return '1小时';
       }
-      let countDay = null;
+      let countDay = 0;
+      let hours = 0
       if (this.$data.formData.endTime && this.$data.formData.startTime) {
         const endTime = new Date(
           formatTimeCompatibleIos(this.$data.formData.endTime),
@@ -194,12 +195,13 @@ export default {
         const startTime = new Date(
           formatTimeCompatibleIos(this.$data.formData.startTime),
         ).getTime();
-        countDay = (endTime - startTime) / this.$data.oneHourTimestamp / 24;
-        countDay = countDay <= 0 ? 0 : countDay;
+        const timespan = (endTime - startTime) / this.$data.oneHourTimestamp;
+        countDay = Math.floor(timespan / 24)
+        hours = timespan % 24
       } else {
         countDay = 0;
       }
-      return `${countDay}天`;
+      return hours > 0 ? `${countDay}天${hours}小时` : `${countDay}天`;
     },
   },
   methods: {
@@ -207,8 +209,7 @@ export default {
     //   this.$nativeAppUtils.callPhone(number);
     // },
     getStartTime() {
-      const time = new Date().getTime();
-      // const startTime = time + 2 * 24 * this.$data.oneHourTimestamp;
+      const time = new Date().getTime() + 3 * this.$data.oneHourTimestamp;
       const startTime = timeToHour(time)
       return startTime;
       //        let time = new Date().getTime();
@@ -267,9 +268,10 @@ export default {
       const value = type === 'startTime'
         ? this.$data.formData.startTime
         : this.$data.formData.endTime;
-      const beginDateTime = type === 'startTime' ? timestampToTime(new Date()) : this.$data.formData.startTime
+      const beginDateTime = type === 'startTime' ? formatTimeCompatibleIos(timestampToTime(new Date())) : formatTimeCompatibleIos(this.$data.formData.startTime)
       const dtPickerType = 'hour' // type === 'startTime' ? 'datetime' : 'date';
       console.log('beginDateTime', beginDateTime)
+      alert(beginDateTime)
       const dtPicker = new mui.DtPicker({
         type: dtPickerType,
         beginYear: year,
@@ -281,34 +283,47 @@ export default {
       const that = this;
       dtPicker.show((rs) => {
         console.log(rs)
+        const timer = `${rs.value}:00:00`
         if (type === 'startTime') {
-          that.initTime(formatTimeCompatibleIos(`${rs.value}:00:00`));
-        } else {
-          // console.log(_this.$data.formData.endTime.substring(10, 19));
-          console.log(that.$data.formData.endTime)
-          console.log(`${rs.value}:00:00`)
+          if (this.validateTime(timer)) {
+            that.initTime(formatTimeCompatibleIos(timer));
+          }
+        } else if (this.validateTime(this.$data.formData.startTime, timer)) {
           that.$data.formData.endTime = formatTimeCompatibleIos(`${rs.value}:00:00`)
         }
         dtPicker.dispose();
       });
     },
-    validateTime() {
+    validateTime(startTimeStr, endTimeStr) {
+      // startTime 为选择的开始时间
+      // endTime 为选择的结束时间
+      // begeinTime 为以当前时间以后的3小时, 只是做了整数小时的加法,
+      // 分钟和秒数直接被截断
+      // 如果存在当前时间是2:59 , 结果为 5:00, 则实际留给门店的准备时间只有2小时1分钟
+      // 所以当前的算法结果预留时间为2~3小时
       //        let currentTime = new Date().getTime();
       const startTime = new Date(
-        formatTimeCompatibleIos(this.getStartTime().substring(0, 16)),
+        formatTimeCompatibleIos(startTimeStr),
       ).getTime();
       const beginTime = new Date(
-        formatTimeCompatibleIos(this.$data.formData.startTime.substring(0, 16)),
+        formatTimeCompatibleIos(this.getStartTime()),
       ).getTime();
+
+      if (beginTime > startTime) {
+        this.$toast('取车时间需在当前时间的3小时后');
+        return false;
+      }
+
+      if (!endTimeStr) {
+        return true
+      }
+
       const endTime = new Date(
-        formatTimeCompatibleIos(this.$data.formData.endTime.substring(0, 16)),
+        formatTimeCompatibleIos(endTimeStr),
       ).getTime();
-      // if (beginTime < startTime) {
-      //   this.$Tools.layerOpen('开始时间需在当前时间的一天后');
-      //   return false;
-      // }
+
       if (endTime <= beginTime) {
-        this.$Tools.layerOpen('结束时间不能小于或等于开始时间');
+        this.$toast('还车时间不能小于或等于取车时间');
         return false;
       }
       if (
@@ -369,6 +384,7 @@ export default {
       const that = this;
       const picker = new mui.PopPicker();
       picker.setData(that.$data[list]);
+      picker.pickers[0].setSelectedIndex(that[info].value, 200);
       picker.show((items) => {
         that[info] = that.$data[list][items[0].value];
         picker.dispose();
@@ -512,11 +528,6 @@ export default {
         this.$toast(shopRes || '请求错误')
         return
       }
-      this.shopList = shopRes.map((item, index) => {
-        item.value = index;
-        item.text = item.corpName;
-        return item;
-      });
 
       // get car
       this.$toast.loading({

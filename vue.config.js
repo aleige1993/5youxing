@@ -127,7 +127,7 @@ module.exports = {
   // 所有 webpack-dev-server 的选项都支持
   devServer: {
     port: 3333, // 端口号
-    host: '192.168.202.78',
+    host: '192.168.201.92',
     https: false, // https:{type:Boolean}
     open: true, // 配置自动启动浏览器
     proxy: 'http://192.168.200.246:10012', // 配置跨域处理,只有一个代理

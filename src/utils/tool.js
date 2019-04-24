@@ -1,6 +1,6 @@
 function isIOS() {
   const agent = window.navigator.userAgent.toLowerCase();
-  return !!agent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)
+  return /(iPhone|iPad|iPod|iOS)/i.test(agent)
 }
 
 function Timespan(time) {
@@ -58,8 +58,7 @@ function timeToHour(time) {
     m,
     s,
   } = Timespan(time)
-  console.log(h)
-  let hour = time.getHours() + 1 > 11
+  let hour = h
   if (m > 0 || s > 0) {
     hour = hour < 10 ? `0${hour}` : hour
   }
@@ -102,4 +101,5 @@ export {
   formatTimeCompatibleIos,
   timestampToTime,
   timeToHour,
+  isIOS,
 }

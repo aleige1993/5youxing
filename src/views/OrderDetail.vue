@@ -211,24 +211,6 @@ export default {
         this.$toast(res || '请求错误');
         return false;
       }
-      this.$data.couponList = res.couponList;
-      if (this.$data.couponList && this.$data.couponList.length) {
-        this.$data.couponList = [
-          {
-            couponName: '不使用优惠劵',
-            couponCode: null,
-          },
-        ].concat(this.$data.couponList);
-      }
-      this.$data.couponList.map((item, index) => {
-        item.value = index;
-        item.text = item.couponName;
-        return item;
-      });
-      this.$data.storeOrderVO = res.storeOrderVO;
-      this.$data.storeVo = res.storeVo;
-      this.$data.carVo = res.carVo;
-      return false;
     },
 
     async wxpay() {
