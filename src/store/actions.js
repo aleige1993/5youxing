@@ -24,7 +24,7 @@ const actions = {
     commit(types.SET_TABINDEX, index)
   },
   setUserState({ commit }) {
-    commit(types.SET_USERSTATUS, '0')
+    commit(types.SET_USERSTATUS, '1')
     commit(types.SAVE_USER)
   },
 

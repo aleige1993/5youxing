@@ -175,8 +175,13 @@ export default {
         this.$toast(res);
         return
       }
-      this.$toast('退款成功')
-      this.initData()
+      const that = this
+      this.$toast({
+        message: '退款成功',
+        onClose: () => {
+          that.initData()
+        },
+      })
     },
     async initData() {
       this.$toast.loading({

@@ -201,7 +201,7 @@ export default {
       } else {
         countDay = 0;
       }
-      if (hours > 4) {
+      if (hours > 3) {
         countDay += 1
         hours = 0
       }
