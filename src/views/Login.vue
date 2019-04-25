@@ -107,8 +107,7 @@ export default {
         this.$toast(res)
         return
       }
-      // this.$router.replace(this.from ? this.from : '/main/car')
-      location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx8ddfeecf1fd01033&redirect_uri=https://zucheapi.songchewang.com/user/update/member&response_type=code&scope=snsapi_base&state=${res.memberNo}#wechat_redirect`
+      this.$router.replace(this.from ? this.from : '/main/car')
     },
     async sendCode() {
       if (this.freez) {

@@ -174,7 +174,7 @@ export default {
         startPoint: '',
         endPoint: '',
         peopleNum: '',
-        actType: '',
+        actType: 1,
         actCode: '',
         actName: '',
       },

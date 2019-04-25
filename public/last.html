@@ -3,7 +3,7 @@
  * @Author: jobscq
  * @LastEditors: jobscq
  * @Date: 2019-04-12 15:48:31
- * @LastEditTime: 2019-04-24 19:33:56
+ * @LastEditTime: 2019-04-25 10:14:23
  -->
  <!DOCTYPE >
  <html>
@@ -140,6 +140,7 @@
      <script>
        var registerUrl = "/user/";
        var mobile = getQueryString("mobile")
+       var result = null
        
        function getQueryString(name) {
          var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
@@ -165,7 +166,8 @@
         // } else {
         //   location.href = './register.html'
         // }
-        location.href = '/#'
+        // location.href = '/#'
+        location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx8ddfeecf1fd01033&redirect_uri=https://zucheapi.songchewang.com/user/update/member&response_type=code&scope=snsapi_base&state=${result.memberNo}#wechat_redirect`
         
       })
 
@@ -210,6 +212,7 @@
              if (res && res.code && res.code == '0000') {
               localStorage.setItem('youx5User', JSON.stringify(res.data))
               $('.last.alert').show()
+              result = res.data
 
              } else {
               //  alert(res.reMsg || '请求失败')
