@@ -94,7 +94,7 @@ import { Button } from 'vant';
       type="info"
       size="large"
       @click="refund"
-    >退款</van-button>
+    >取消订单</van-button>
   </div>
 </template>
 
@@ -177,7 +177,7 @@ export default {
       }
       const that = this
       this.$toast({
-        message: '退款成功',
+        message: '取消订单成功',
         onClose: () => {
           that.initData()
         },
