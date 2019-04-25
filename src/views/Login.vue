@@ -138,3 +138,8 @@ export default {
   },
 };
 </script>
+<style lang="less" scoped>
+.container {
+  background-color: #fff;
+}
+</style>

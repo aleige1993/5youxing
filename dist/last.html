@@ -3,7 +3,7 @@
  * @Author: jobscq
  * @LastEditors: jobscq
  * @Date: 2019-04-12 15:48:31
- * @LastEditTime: 2019-04-25 10:14:23
+ * @LastEditTime: 2019-04-25 15:32:54
  -->
  <!DOCTYPE >
  <html>
@@ -211,6 +211,7 @@
            success: function(res, status, xhr) {
              if (res && res.code && res.code == '0000') {
               localStorage.setItem('youx5User', JSON.stringify(res.data))
+              localStorage.setItem('youx5Token', res.data.token)
               $('.last.alert').show()
               result = res.data
 
