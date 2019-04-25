@@ -10,7 +10,7 @@
     </ul>
     <div class="create-order-inview first">
       <h1 @click="selectType('shopInfo', 'shopList')">
-        {{shopInfo.corpName || '--'}}
+        <span>取车门店: </span> {{shopInfo.corpName || '--'}}
         <img src="../assets/bottom-arrow-solid2.png">
       </h1>
       <h2>地址：{{shopInfo.bizProvinceName || '--'}}{{shopInfo.bizCityName}}{{shopInfo.bizDistrictName}}{{shopInfo.bizRoadAddr}}</h2>
