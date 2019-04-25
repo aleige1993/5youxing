@@ -165,7 +165,6 @@ export default {
         message: '加载中',
       });
       const res = await this.$postData(`wx/refund?orderNo=${this.orderNo}`);
-      console.log(res);
 
       this.$toast.clear();
       if (typeof res === 'string') {
@@ -174,7 +173,10 @@ export default {
           return;
         }
         this.$toast(res);
+        return
       }
+      this.$toast('退款成功')
+      this.initData()
     },
     async initData() {
       this.$toast.loading({

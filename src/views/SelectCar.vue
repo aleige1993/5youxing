@@ -203,6 +203,7 @@ export default {
       }
       if (hours > 4) {
         countDay += 1
+        hours = 0
       }
       return hours > 0 ? `${countDay}天${hours}小时` : `${countDay}天`;
     },
