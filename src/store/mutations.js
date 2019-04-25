@@ -4,7 +4,7 @@ import { saveAllToStorage, saveUserByStorage, delUserByStorage } from '../utils/
 const mutations = {
   [types.SET_USER](state, user) {
     if (!user) {
-      state.user = null;
+      state.user = {};
       delUserByStorage()
       return;
     }
