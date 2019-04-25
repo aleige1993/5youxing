@@ -272,7 +272,7 @@ export default {
       const value = type === 'startTime'
         ? this.$data.formData.startTime
         : this.$data.formData.endTime;
-      const beginDateTime = type === 'startTime' ? formatTimeCompatibleIos(timestampToTime(new Date())) : formatTimeCompatibleIos(this.$data.formData.startTime)
+      const beginDateTime = type === 'startTime' ? this.$data.formData.startTime : this.$data.formData.endTime
       const dtPickerType = 'hour' // type === 'startTime' ? 'datetime' : 'date';
       console.log('beginDateTime', beginDateTime)
       const dtPicker = new mui.DtPicker({
@@ -281,7 +281,7 @@ export default {
         endYear: year + 1,
         beginDateTime,
         labels: ['年', '月', '日', '时'],
-        value: timestampToTime(value, 'd'),
+        value: timestampToTime(formatTimeCompatibleIos(value), 'h'),
       });
       const that = this;
       dtPicker.show((rs) => {
