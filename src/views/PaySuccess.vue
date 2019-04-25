@@ -67,7 +67,7 @@ export default {
     a{
       display: inline-block;
       padding: .3rem 0;
-      width: 45%;
+      width: 100%;
       text-align: center;
       border-radius:1rem;
       background-color: #fff;
