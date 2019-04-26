@@ -167,21 +167,19 @@ export default {
       const res = await this.$postData(`wx/refund?orderNo=${this.orderNo}`);
 
       this.$toast.clear();
-      if (typeof res === 'string') {
+      if (typeof res === 'string' || !res) {
         if (res === '/logout') {
           this.$store.dispatch('outLogin');
           return;
         }
-        this.$toast(res);
-        return
+        const that = this
+        this.$toast({
+          message: res || '取消订单成功',
+          onClose: () => {
+            that.initData()
+          },
+        })
       }
-      const that = this
-      this.$toast({
-        message: '取消订单成功',
-        onClose: () => {
-          that.initData()
-        },
-      })
     },
     async initData() {
       this.$toast.loading({
