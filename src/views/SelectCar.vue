@@ -330,6 +330,13 @@ export default {
         return false;
       }
       if (
+        this.$data.formData.actType === 0
+        && endTime - beginTime < 24 * this.$data.oneHourTimestamp
+      ) {
+        this.$toast('租车时间至少1天起');
+        return false;
+      }
+      if (
         this.$data.formData.actType === '1'
         && endTime - beginTime < 24 * 4 * this.$data.oneHourTimestamp
       ) {
