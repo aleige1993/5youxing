@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-// import Login from './views/Login.vue';
-// import Main from './views/Main.vue';
+import Login from './views/Login.vue';
+import Main from './views/Main.vue';
 import { getUserByStorage } from './utils/storage'
 
 Vue.use(Router);
@@ -13,22 +13,22 @@ const router = new Router({
     {
       path: '/login',
       name: 'login',
-      // component: Login,
+      component: Login,
     },
     {
       path: '/main',
       name: 'mainPage',
-      // component: Main,
+      component: Main,
       children: [
         {
           path: 'car',
           name: 'selectCar',
-          // component: () => import(/* webpackChunkName: "main" */ './views/SelectCar.vue'),
+          component: () => import(/* webpackChunkName: "main" */ './views/SelectCar.vue'),
         },
         {
           path: 'mine',
           name: 'mine',
-          // component: () => import(/* webpackChunkName: "mine" */ './views/Mine.vue'),
+          component: () => import(/* webpackChunkName: "mine" */ './views/Mine.vue'),
           meta: { requiresAuth: true },
           children: [],
         },
@@ -38,7 +38,7 @@ const router = new Router({
     {
       path: '/create',
       name: 'createOrder',
-      // component: () => import(/* webpackChunkName: "order" */ './views/CreateOrder.vue'),
+      component: () => import(/* webpackChunkName: "order" */ './views/CreateOrder.vue'),
       meta: {
         requiresAuth: true,
       },
@@ -47,7 +47,7 @@ const router = new Router({
       path: '/orderlist',
       name: 'orderlist',
       title: '我的租车订单',
-      // component: () => import(/* webpackChunkName: "order" */ './views/OrderList.vue'),
+      component: () => import(/* webpackChunkName: "order" */ './views/OrderList.vue'),
       meta: {
         requiresAuth: true,
       },
@@ -56,7 +56,7 @@ const router = new Router({
       path: '/orderDetail',
       name: 'orderDetail',
       title: '订单详情',
-      // component: () => import(/* webpackChunkName: "coupon" */ './views/OrderDetail.vue'),
+      component: () => import(/* webpackChunkName: "coupon" */ './views/OrderDetail.vue'),
       meta: {
         requiresAuth: true,
       },
@@ -65,7 +65,7 @@ const router = new Router({
       path: '/couponlist',
       name: 'couponlist',
       title: '我的优惠券',
-      // component: () => import(/* webpackChunkName: "coupon" */ './views/CouponList.vue'),
+      component: () => import(/* webpackChunkName: "coupon" */ './views/CouponList.vue'),
       meta: {
         requiresAuth: true,
       },
@@ -74,7 +74,7 @@ const router = new Router({
       path: '/fillinfo',
       name: 'fillinfo',
       title: '完善信息',
-      // component: () => import(/* webpackChunkName: "fill" */ './views/FillInfo.vue'),
+      component: () => import(/* webpackChunkName: "fill" */ './views/FillInfo.vue'),
       meta: {
         requiresAuth: true,
       },
@@ -83,7 +83,7 @@ const router = new Router({
       path: '/success',
       name: 'success',
       title: '下单成功',
-      // component: () => import(/* webpackChunkName: "fill" */ './views/OrderSuccess.vue'),
+      component: () => import(/* webpackChunkName: "fill" */ './views/OrderSuccess.vue'),
       meta: {
         requiresAuth: true,
       },
@@ -92,7 +92,7 @@ const router = new Router({
       path: '/successpay',
       name: 'successpay',
       title: '支付成功',
-      // component: () => import(/* webpackChunkName: "fill" */ './views/PaySuccess.vue'),
+      component: () => import(/* webpackChunkName: "fill" */ './views/PaySuccess.vue'),
       meta: {
         requiresAuth: true,
       },

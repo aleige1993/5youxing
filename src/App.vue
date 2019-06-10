@@ -11,6 +11,7 @@
   .container {
     height: 100%;
     // background-color: #fff;
+    background-color: #eeeeed;
     .row {
       margin: 10px 0;
     }
